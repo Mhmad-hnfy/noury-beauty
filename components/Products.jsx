@@ -46,7 +46,7 @@ const Products = ({ categoryId, limit }) => {
         <h2 className="text-3xl md:text-5xl font-bold text-[#BB015E] mb-4">
           {categoryId ? 'منتجات القسم' : 'أحدث المنتجات'}
         </h2>
-        <p className="text-[#BB015E]/70 text-lg">تشكيلة مميزة من أرقى المنتجات لجمالك</p>
+        <p className="text-black font-bold text-lg">تشكيلة مميزة من أرقى المنتجات لجمالك</p>
       </motion.div>
 
       {products.length > 0 ? (
@@ -88,12 +88,12 @@ const Products = ({ categoryId, limit }) => {
               </div>
 
               <div className="p-6 text-center">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
+                <h3 className="text-xl font-bold text-black mb-2">{product.name}</h3>
                 
                 {/* Price Display with Discount */}
                 <div className="flex flex-col items-center mb-5">
                     {product.originalPrice && product.originalPrice > product.price && (
-                        <span className="text-gray-300 line-through text-sm font-bold">{product.originalPrice} جنيه</span>
+                        <span className="text-black/40 line-through text-sm font-bold">{product.originalPrice} جنيه</span>
                     )}
                     <p className="text-[#BB015E] font-black text-2xl">
                         {product.price} <span className="text-sm">جنيه مصري</span>

@@ -48,7 +48,7 @@ const Hearo = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="text-gray-600 text-lg md:text-xl mb-10 max-w-lg ml-auto leading-relaxed"
+            className="text-black text-lg md:text-xl font-bold mb-10 max-w-lg ml-auto leading-relaxed"
           >
             اكتشفي تشكيلتنا الحصرية من منتجات التجميل الفاخرة التي تمنحكِ الثقة والتألق في كل لحظة.
           </motion.p>
@@ -92,8 +92,8 @@ const Hearo = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </div>
               <div>
-                <p className="text-sm text-gray-500">أكثر من</p>
-                <p className="font-bold text-gray-900">+10k عميلة سعيدة</p>
+                <p className="text-sm text-black font-bold">أكثر من</p>
+                <p className="font-black text-black">+10k عميلة سعيدة</p>
               </div>
             </div>
           </motion.div>

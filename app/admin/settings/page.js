@@ -37,41 +37,41 @@ export default function AdminSettingsPage() {
         <form onSubmit={handleSave} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             <div className="text-right">
-              <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">اسم المتجر</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">اسم المتجر</label>
               <input 
                 type="text" 
                 value={settings.storeName}
                 onChange={(e) => setSettings({...settings, storeName: e.target.value})}
-                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all"
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
                 placeholder="Noury Beauty"
               />
             </div>
             <div className="text-right">
-              <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">بريد التواصل</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">بريد التواصل</label>
               <input 
                 type="email" 
                 value={settings.contactEmail}
                 onChange={(e) => setSettings({...settings, contactEmail: e.target.value})}
-                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all"
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
                 placeholder="contact@noury.com"
               />
             </div>
             <div className="text-right">
-              <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">رسوم الشحن الثابتة</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">رسوم الشحن الثابتة</label>
               <input 
                 type="number" 
                 value={settings.shippingFee}
                 onChange={(e) => setSettings({...settings, shippingFee: e.target.value})}
-                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all"
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
               />
             </div>
             <div className="text-right">
-              <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">العملة</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">العملة</label>
               <input 
                 type="text" 
                 value={settings.currency}
                 onChange={(e) => setSettings({...settings, currency: e.target.value})}
-                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all"
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
               />
             </div>
           </div>

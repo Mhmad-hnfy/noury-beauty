@@ -86,43 +86,43 @@ function CheckoutContent() {
             </h2>
             <form onSubmit={handlePlaceOrder} className="space-y-6">
               <div className="text-right">
-                <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">الاسم بالكامل</label>
+                <label className="block text-sm font-bold text-black mb-2 mr-2">الاسم بالكامل</label>
                 <input 
                   type="text" 
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all" 
+                  className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all text-black font-bold" 
                   placeholder="مثلاً: سارة محمد أحمد"
                 />
               </div>
               <div className="text-right">
-                <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">رقم الهاتف</label>
+                <label className="block text-sm font-bold text-black mb-2 mr-2">رقم الهاتف</label>
                 <input 
                   type="tel" 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all" 
+                  className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all text-black font-bold" 
                   placeholder="01xxxxxxxxx"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="text-right">
-                  <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">المحافظة</label>
+                  <label className="block text-sm font-bold text-black mb-2 mr-2">المحافظة</label>
                   <input 
                     type="text" 
                     value={formData.city}
                     onChange={(e) => setFormData({...formData, city: e.target.value})}
-                    className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all" 
+                    className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all text-black font-bold" 
                     placeholder="القاهرة"
                   />
                 </div>
                 <div className="text-right">
-                  <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">العنوان بالتفصيل</label>
+                  <label className="block text-sm font-bold text-black mb-2 mr-2">العنوان بالتفصيل</label>
                   <input 
                     type="text" 
                     value={formData.address}
                     onChange={(e) => setFormData({...formData, address: e.target.value})}
-                    className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all" 
+                    className="w-full p-4 rounded-2xl bg-pink-50 border-2 border-transparent focus:border-[#BB015E] focus:bg-white outline-none transition-all text-black font-bold" 
                     placeholder="رقم العقار، اسم الشارع، الشقة"
                   />
                 </div>

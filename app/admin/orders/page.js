@@ -26,8 +26,8 @@ export default function AdminOrdersPage() {
     <div className="space-y-8">
       <div className="bg-white p-6 lg:p-8 rounded-3xl shadow-sm border border-pink-100 flex flex-col lg:flex-row justify-between items-center gap-6">
         <div>
-           <h3 className="text-xl font-bold text-gray-800">قائمة الطلبات ({orders.length}) ✨</h3>
-           <p className="text-sm text-gray-400 font-bold">تتبعي مبيعاتك وتواصلي مع عميلاتك</p>
+           <h3 className="text-xl font-bold text-black">قائمة الطلبات ({orders.length}) ✨</h3>
+           <p className="text-sm text-black/60 font-bold">تتبعي مبيعاتك وتواصلي مع عميلاتك</p>
         </div>
         <div className="flex gap-4">
             <div className="bg-blue-50 text-blue-600 px-6 py-2 rounded-full font-bold text-xs">
@@ -62,13 +62,13 @@ export default function AdminOrdersPage() {
                             className="hover:bg-pink-50/50 transition-colors group"
                         >
                             <td className="p-4 lg:p-6">
-                                <div className="font-bold text-gray-800 text-sm mb-1">{order.customer?.name}</div>
+                                <div className="font-bold text-black text-sm mb-1">{order.customer?.name}</div>
                                 <div className="text-[#BB015E] font-bold mb-1">{order.customer?.phone}</div>
-                                <div className="text-[10px] text-gray-400">{order.customer?.city || 'غير محدد'}، {order.customer?.address || 'بدون عنوان'}</div>
+                                <div className="text-[10px] text-black/70 font-bold">{order.customer?.city || 'غير محدد'}، {order.customer?.address || 'بدون عنوان'}</div>
                             </td>
                             <td className="p-4 lg:p-6">
-                                <div className="font-bold text-gray-600">{order.productName || 'منتج غير معروف'}</div>
-                                <div className="text-pink-400 font-bold">الكمية: {order.quantity}</div>
+                                <div className="font-bold text-black">{order.productName || 'منتج غير معروف'}</div>
+                                <div className="text-black/80 font-bold">الكمية: {order.quantity}</div>
                             </td>
                             <td className="p-4 lg:p-6 font-black text-gray-800 text-sm">{order.total} جنيه</td>
                             <td className="p-4 lg:p-6 text-gray-400 text-[10px]">{order.date}</td>

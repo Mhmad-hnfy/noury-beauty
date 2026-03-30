@@ -121,12 +121,12 @@ export default function AdminCategoriesPage() {
                 </div>
 
                 <div className="text-right">
-                    <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">اسم القسم</label>
+                    <label className="block text-sm font-bold text-black mb-2 mr-2">اسم القسم</label>
                     <input 
                         type="text" 
                         value={newCat.name}
                         onChange={(e) => setNewCat({...newCat, name: e.target.value})}
-                        className="w-full p-4 rounded-xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all"
+                        className="w-full p-4 rounded-xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
                         placeholder="مثلاً: العناية بالشعر"
                     />
                 </div>

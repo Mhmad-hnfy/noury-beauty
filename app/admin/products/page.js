@@ -98,8 +98,8 @@ export default function AdminProductsPage() {
       {/* Header & Add Button */}
       <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-pink-100">
         <div>
-          <h3 className="text-xl font-bold text-gray-800">إدارة المنتجات ({products.length})</h3>
-          <p className="text-sm text-gray-400 font-bold">تحكمي في المخزون والأسعار والخصومات</p>
+          <h3 className="text-xl font-bold text-black">إدارة المنتجات ({products.length})</h3>
+          <p className="text-sm text-black/60 font-bold">تحكمي في المخزون والأسعار والخصومات</p>
         </div>
         <motion.button 
           whileHover={{ scale: 1.05 }}
@@ -219,43 +219,43 @@ export default function AdminProductsPage() {
                 {/* Right Side: Details */}
                 <div className="space-y-4">
                     <div className="text-right">
-                        <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">اسم المنتج</label>
+                        <label className="block text-sm font-bold text-black mb-2 mr-2">اسم المنتج</label>
                         <input 
                             type="text" 
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E]" 
+                            className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E] text-black font-bold" 
                             placeholder="مثلاً: ليب جلوس وردي" 
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-right">
-                            <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">السعر الحالي</label>
+                            <label className="block text-sm font-bold text-black mb-2 mr-2">السعر الحالي</label>
                             <input 
                                 type="number" 
                                 value={formData.price}
                                 onChange={(e) => setFormData({...formData, price: e.target.value})}
-                                className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E]" 
+                                className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E] text-black font-bold" 
                                 placeholder="450" 
                             />
                         </div>
                         <div className="text-right">
-                            <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">السعر قبل الخصم</label>
+                            <label className="block text-sm font-bold text-black mb-2 mr-2">السعر قبل الخصم</label>
                             <input 
                                 type="number" 
                                 value={formData.originalPrice}
                                 onChange={(e) => setFormData({...formData, originalPrice: e.target.value})}
-                                className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E]" 
+                                className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E] text-black font-bold" 
                                 placeholder="600" 
                             />
                         </div>
                     </div>
                     <div className="text-right">
-                        <label className="block text-sm font-bold text-gray-400 mb-2 mr-2">القسم</label>
+                        <label className="block text-sm font-bold text-black mb-2 mr-2">القسم</label>
                         <select 
                             value={formData.categoryId}
                             onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
-                            className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E]"
+                            className="w-full p-4 rounded-2xl bg-pink-50 border-none outline-none focus:ring-2 focus:ring-[#BB015E] text-black font-bold"
                         >
                             {categories.map(cat => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>

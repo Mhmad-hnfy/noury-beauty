@@ -6,74 +6,53 @@ import { db } from '../data/supabase';
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
-    
+
     useEffect(() => {
         setCategories(db.categories.list());
     }, []);
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.15
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "backOut" } }
-    };
-
     return (
-        <section className="py-12 px-4 max-w-7xl mx-auto bg-white overflow-hidden">
-            <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-                viewport={{ once: true }}
-                className="text-center mb-12"
-            >
-                <h2 className="text-3xl md:text-4xl font-bold text-[#BB015E] font-serif mb-3">تسوقي بالقسم</h2>
-                <div className="h-1 w-20 bg-pink-100 mx-auto rounded-full"></div>
-            </motion.div>
+        <section className="py-20 px-6 max-w-7xl mx-auto bg-white overflow-hidden animate-fade-in transition-all">
+            <div className="flex flex-col items-center mb-16 gap-4">
+                <span className="text-rose font-black tracking-widest text-sm uppercase">تسوقي حسب اختيارك</span>
+                <h2 className="text-4xl md:text-5xl font-black text-black font-serif">الأقسام المميزة ✨</h2>
+                <div className="h-2 w-32 bg-rose rounded-full" />
+            </div>
 
-            <motion.div 
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="flex flex-wrap justify-center gap-6 md:gap-10"
-            >
-                {categories.map((cat) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-8">
+                {categories.map((cat, index) => (
                     <motion.div 
                         key={cat.id} 
-                        variants={itemVariants}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        viewport={{ once: true }}
                     >
                         <Link 
                             href={`/categories/${cat.id}`}
                             className="group cursor-pointer flex flex-col items-center"
                         >
                             <motion.div 
-                                whileHover={{ scale: 1.05, rotate: 5 }}
-                                className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-[6px] border-pink-50 shadow-sm group-hover:border-[#BB015E] transition-all duration-300 relative"
+                                whileHover={{ scale: 1.05 }}
+                                className="w-full aspect-square rounded-[3rem] overflow-hidden border-4 border-rose/5 shadow-sm group-hover:border-rose/20 transition-all duration-500 relative"
                             >
                                 <img 
                                     src={cat.image} 
                                     alt={cat.name} 
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <div className="absolute inset-0 bg-pink-900/5 group-hover:bg-transparent transition-colors duration-300"></div>
+                                <div className="absolute inset-0 bg-rose/10 group-hover:bg-transparent transition-colors duration-500"></div>
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="bg-white/90 backdrop-blur-md text-rose text-xs font-black px-6 py-2 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                        استكشفي
+                                    </span>
+                                </div>
                             </motion.div>
-                            <h3 className="mt-4 text-lg md:text-xl font-bold text-gray-800 group-hover:text-[#BB015E] transition-colors">{cat.name}</h3>
+                            <h3 className="mt-6 text-lg md:text-xl font-black text-black group-hover:text-rose transition-colors font-serif">{cat.name}</h3>
                         </Link>
                     </motion.div>
                 ))}
-                {categories.length === 0 && (
-                    <div className="text-gray-300 italic">بانتظار إضافة الأقسام من لوحة التحكم... ✨</div>
-                )}
-            </motion.div>
+            </div>
         </section>
     );
 };

@@ -8,38 +8,43 @@ const Header = () => {
     const { cartCount } = useCart();
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-pink-100 shadow-sm">
-            <nav className="flex items-center w-full max-w-7xl mx-auto justify-between px-4 py-3 text-[#BB015E]">
-                <Link href="/" className="text-2xl font-bold font-serif whitespace-nowrap">
-                    Noury Beauty
-                </Link>
+        <header className="sticky top-0 z-[100] w-full bg-white/95 backdrop-blur-md border-b border-rose/10 shadow-sm transition-all duration-300">
+            <nav className="flex items-center w-full max-w-7xl mx-auto justify-between px-6 py-4">
+                <div className="flex-shrink-0">
+                    <Link href="/" className="group flex items-center gap-3">
+                        <img src="/logo.png" alt="Noury Beauty Logo" className="h-10 md:h-14 w-auto object-contain transition-transform group-hover:scale-105" />
+                    </Link>
+                </div>
                 
-                <div id="menu" className={`${mobileOpen ? 'max-md:left-0' : 'max-md:-left-full'} max-md:fixed max-md:bg-white/95 max-md:backdrop-blur max-md:top-0 transition-all duration-300 max-md:h-screen max-md:w-full max-md:z-50 max-md:justify-center flex-col md:flex-row flex items-center gap-6 text-base font-bold flex-1 md:justify-center`}>
-                    <button onClick={() => setMobileOpen(false)} className="md:hidden absolute top-4 right-4 bg-gray-100 text-[#BB015E] p-2 rounded-full transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                <div id="menu" className={`${mobileOpen ? 'max-md:translate-x-0' : 'max-md:translate-x-full'} max-md:fixed max-md:bg-white max-md:top-0 right-0 transition-transform duration-500 max-md:h-screen max-md:w-[80%] max-md:z-[110] max-md:shadow-2xl flex items-center justify-center`}>
+                    <button onClick={() => setMobileOpen(false)} className="md:hidden absolute top-6 right-6 p-2 text-rose hover:bg-rose/5 rounded-full transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                     </button>
                     
-                    <Link className="px-4 py-2 hover:text-[#8F0147] transition hover:bg-pink-50 rounded-full" href="/" onClick={() => setMobileOpen(false)}>الرئيسية</Link>
-                    <Link className="px-4 py-2 hover:text-[#8F0147] transition hover:bg-pink-50 rounded-full" href="/products" onClick={() => setMobileOpen(false)}>المنتجات</Link>
-                    <Link className="px-4 py-2 hover:text-[#8F0147] transition hover:bg-pink-50 rounded-full" href="/cart" onClick={() => setMobileOpen(false)}>السلة</Link>
-                    <Link className="px-4 py-2 hover:text-[#8F0147] transition hover:bg-pink-50 rounded-full" href="#footer" onClick={() => setMobileOpen(false)}>تواصل معنا</Link>
+                    <div className="flex flex-col md:flex-row items-center gap-8 text-black font-bold uppercase tracking-widest text-sm">
+                        <Link className="px-3 py-1 hover:text-rose transition-colors" href="/" onClick={() => setMobileOpen(false)}>الرئيسية</Link>
+                        <Link className="px-3 py-1 hover:text-rose transition-colors" href="/products" onClick={() => setMobileOpen(false)}>المنتجات</Link>
+                        <Link className="px-3 py-1 hover:text-rose transition-colors" href="/cart" onClick={() => setMobileOpen(false)}>السلة</Link>
+                        <Link className="px-3 py-1 hover:text-rose transition-colors" href="#footer" onClick={() => setMobileOpen(false)}>تواصل معنا</Link>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <Link href="/cart" className="relative p-2 text-[#BB015E] hover:bg-pink-50 rounded-full transition cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <div className="flex items-center gap-6">
+                    <Link href="/cart" className="relative group p-2 rounded-full hover:bg-rose/5 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                         </svg>
-                        <span className="absolute top-0 right-0 bg-[#BB015E] text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">
+                        <span className="absolute -top-1 -right-1 bg-rose text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center animate-pulse border-2 border-white">
                             {cartCount}
                         </span>
                     </Link>
                     
-                    <button onClick={() => setMobileOpen(true)} className="md:hidden p-2 text-[#BB015E] hover:bg-pink-50 rounded-md transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                    <button onClick={() => setMobileOpen(true)} className="md:hidden p-2 text-black hover:bg-rose/5 rounded-lg transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                     </button>
                 </div>
             </nav>
+            {mobileOpen && <div onClick={() => setMobileOpen(false)} className="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[105]" />}
         </header>
     );
 };
