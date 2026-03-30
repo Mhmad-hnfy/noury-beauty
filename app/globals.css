@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #FDF2F8;
   --foreground: #111827;
-  --primary: #f43f5e;
-  --primary-hover: #e11d48;
+  /* Slightly darker rose for better contrast and premium feel */
+  --primary: #be123c; 
+  --primary-hover: #9f1239;
 }
 
 @theme inline {

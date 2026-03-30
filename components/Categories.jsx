@@ -12,14 +12,14 @@ const Categories = () => {
     }, []);
 
     return (
-        <section className="py-20 px-6 max-w-7xl mx-auto bg-white overflow-hidden animate-fade-in transition-all">
-            <div className="flex flex-col items-center mb-16 gap-4">
+        <section className="py-24 px-6 max-w-7xl mx-auto bg-transparent overflow-hidden animate-fade-in transition-all">
+            <div className="flex flex-col items-center mb-20 gap-4">
                 <span className="text-rose font-black tracking-widest text-sm uppercase">تسوقي حسب اختيارك</span>
                 <h2 className="text-4xl md:text-5xl font-black text-black font-serif">الأقسام المميزة ✨</h2>
                 <div className="h-2 w-32 bg-rose rounded-full" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 lg:gap-14">
                 {categories.map((cat, index) => (
                     <motion.div 
                         key={cat.id} 

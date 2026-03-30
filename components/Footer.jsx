@@ -2,13 +2,13 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-pink-50 border-t border-pink-100 pt-16 pb-8 text-pink-900 mt-10">
+    <footer className="bg-transparent border-t border-rose/10 pt-16 pb-8 text-black mt-10">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 text-right">
         
         {/* Brand Section */}
         <div className="col-span-1 md:col-span-1">
-          <h2 className="text-3xl font-bold font-serif text-[#BB015E] mb-4">Noury Beauty</h2>
-          <p className="text-sm leading-relaxed text-pink-700">
+          <h2 className="text-3xl font-bold font-serif text-[#f43f5e] mb-4">Noury Beauty</h2>
+          <p className="text-sm leading-relaxed text-black font-bold">
             وجهتك الأولى لأحدث وأرقى مستحضرات التجميل. نؤمن بأن كل امرأة تستحق التألق وإبراز جمالها الطبيعي بمنتجات أصلية ذات جودة عالية.
           </p>
         </div>

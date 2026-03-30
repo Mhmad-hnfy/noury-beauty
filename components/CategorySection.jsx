@@ -18,7 +18,7 @@ const CategorySection = ({ category }) => {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-20 px-6 max-w-7xl mx-auto border-b last:border-0 border-rose/5 animate-fade-in">
+    <section className="py-24 px-6 max-w-7xl mx-auto border-b last:border-0 border-rose/5 animate-fade-in transition-all">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
         <div className="text-right">
           <h2 className="text-4xl lg:text-5xl font-black text-black mb-4 font-serif">{category.name} ✨</h2>

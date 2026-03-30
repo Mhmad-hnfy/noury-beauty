@@ -15,7 +15,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div dir="rtl" className="bg-white min-h-screen flex flex-col font-sans text-black selection:bg-rose selection:text-white">
+    <div dir="rtl" className="bg-transparent min-h-screen flex flex-col font-sans text-black selection:bg-rose selection:text-white">
       <Header/>
       
       <main className="flex-1">
@@ -33,7 +33,7 @@ export default function Home() {
         </div>
 
         {/* 4. Newsletter or Trust Section (Optional) */}
-        <section className="py-20 bg-rose/5 text-center px-4">
+        <section className="py-24 bg-rose/5 border-y border-rose/10 text-center px-4">
             <h2 className="text-3xl md:text-5xl font-black text-rose mb-6 font-serif">انضمي لعالم نوري ✨</h2>
             <p className="text-black font-bold text-lg mb-10 max-w-2xl mx-auto">
               اشتركي لتصلك أحدث المنتجات والخصومات الحصرية قبل الجميع.

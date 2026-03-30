@@ -34,7 +34,7 @@ const Slider = () => {
   }, []);
 
   return (
-    <section className="relative h-[60vh] md:h-[85vh] w-full overflow-hidden bg-gray-50 border-b border-rose/5">
+    <section className="relative h-[60vh] md:h-[85vh] w-full overflow-hidden bg-transparent border-b border-rose/5">
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
