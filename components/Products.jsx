@@ -33,46 +33,48 @@ const Products = ({ categoryId, limit }) => {
           {products.map((product) => (
             <motion.div 
               key={product.id} 
-              whileHover={{ y: -10 }}
-              className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-rose/5 group"
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-[2rem] overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
             >
-              <Link href={`/checkout?productId=${product.id}`} className="block relative h-80 w-full overflow-hidden bg-pink-50">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <Link href={`/checkout?productId=${product.id}`} className="block relative aspect-square w-full overflow-hidden bg-pink-50/50">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 {product.originalPrice && product.originalPrice > product.price && (
-                    <div className="absolute top-6 right-6 bg-rose text-site-light text-xs font-black px-4 py-1.5 rounded-full z-20 shadow-lg">
-                        خصم {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                    <div className="absolute top-4 right-4 bg-rose text-white text-[10px] font-black px-3 py-1 rounded-full z-20 shadow-lg">
+                        -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
                     </div>
                 )}
               </Link>
 
-              <div className="p-5 text-right flex flex-col">
-                <h3 className="text-lg md:text-xl font-medium text-black mb-1 truncate font-sans">{product.name}</h3>
-                {/* <p className="text-gray-400 text-xs mb-3">متوفر بخيارات متعددة</p> */}
+              <div className="p-6 text-right flex flex-col gap-1">
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-rose transition-colors duration-300">{product.name}</h3>
+                <p className="text-gray-400 text-xs font-medium">متوفر بخيارات متعددة</p>
                 
-                <div className="flex flex-col items-start mb-6 gap-0.5">
-                    <p className="text-black font-bold text-xl md:text-2xl">
-                        <span className="text-xs font-medium text-black/60 mr-1">EGP</span> {product.price}
-                    </p>
+                <div className="mt-2 flex flex-col gap-0.5">
+                    <div className="flex items-center gap-2">
+                        <span className="text-rose font-black text-xl">EGP {product.price}</span>
+                    </div>
                     {product.originalPrice && product.originalPrice > product.price && (
-                        <div className="flex items-center gap-2">
-                           <span className="text-gray-300 line-through text-sm">EGP {product.originalPrice}</span>
-                           <span className="text-rose text-[10px] font-bold">0%</span>
+                        <div className="flex items-center gap-2 text-xs font-bold text-gray-300">
+                           <span className="line-through">EGP {product.originalPrice}</span>
+                           <span className="text-rose/50">0%</span>
                         </div>
                     )}
                 </div>
 
-                <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 gap-2 mt-6">
                   <Link 
                     href={`/checkout?productId=${product.id}`}
-                    className="w-full bg-pink-50 text-rose hover:bg-pink-100 font-black py-4 rounded-full transition-all shadow-md text-sm flex items-center justify-center"
+                    className="w-full   text-center py-3.5 rounded-2xl font-bold hover:bg-[#fbcfe8] transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                   >
-                    شراء الآن 🛍️
+                    <span>شراء الآن</span>
+                    <span className="text-lg">🛍️</span>
                   </Link>
                   <button 
                     onClick={() => addToCart(product)}
-                    className="w-full bg-white border-2 border-pink-100 text-rose hover:bg-rose hover:text-white font-black py-4 rounded-full transition-all text-sm"
+                    className="w-full bg-pink-50 text-rose text-center py-3.5 rounded-2xl font-bold hover:bg-pink-100 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
-                    أضف للسلة 🛒
+                    <span>أضف للسلة</span>
+                    <span className="text-lg">🛒</span>
                   </button>
                 </div>
               </div>

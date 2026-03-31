@@ -1,31 +1,51 @@
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import Header from '../../../components/Header';
 import Products from '../../../components/Products';
 import Footer from '../../../components/Footer';
-import { categories } from '../../../data/data';
+import { db } from '../../../data/supabase';
+import { useParams } from 'next/navigation';
 
-export async function generateMetadata({ params }) {
-  const { id } = await params;
-  const category = categories.find(c => c.id === parseInt(id));
-  return {
-    title: `${category?.name || 'القسم'} | Noury Beauty`,
-    description: `تصفحي منتجات ${category?.name || ''} الفاخرة`,
-  };
-}
+export default function CategoryPage() {
+  const params = useParams();
+  const id = params?.id;
+  const [category, setCategory] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default async function CategoryPage({ params }) {
-  const { id } = await params;
-  const category = categories.find(c => c.id === parseInt(id));
+  useEffect(() => {
+    if (id) {
+      const list = db.categories.list();
+      const found = list.find(c => c.id === parseInt(id));
+      setCategory(found);
+      setLoading(false);
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div dir="rtl" className="bg-pink-50 min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+            <div className="text-[#BB015E] font-bold animate-pulse text-xl">جاري التحميل... 🌸</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div dir="rtl" className="bg-pink-50 min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 py-10">
-        <div className="max-w-7xl mx-auto px-4">
-            <h1 className="text-4xl font-bold text-[#BB015E] mb-2">{category?.name}</h1>
-            <div className="h-1 w-20 bg-[#BB015E] rounded-full mb-10"></div>
+      <main className="flex-1 py-20 px-6">
+        <div className="max-w-[90rem] mx-auto">
+            <div className="flex flex-col items-start mb-12 gap-4">
+                <h1 className="text-4xl md:text-6xl font-black text-black font-serif">
+                   {category?.name || 'القسم'} ✨
+                </h1>
+                <div className="h-2 w-32 bg-rose rounded-full" />
+            </div>
+            {id && <Products categoryId={id} />}
         </div>
-        <Products categoryId={id} />
       </main>
       <Footer />
     </div>

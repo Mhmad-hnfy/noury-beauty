@@ -28,11 +28,11 @@ const Categories = () => {
                         transition={{ delay: index * 0.1 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -10 }}
-                        className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-rose/5 group"
+                        className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border-3 border-[#BE123C] group"
                     >
                         <Link 
                             href={`/categories/${cat.id}`}
-                            className="block relative aspect-video overflow-hidden bg-pink-50"
+                            className="block relative aspect-square overflow-hidden bg-pink-50"
                         >
                             <img 
                                 src={cat.image} 
@@ -41,15 +41,7 @@ const Categories = () => {
                             />
                             <div className="absolute inset-0 bg-rose/10 group-hover:bg-transparent transition-colors duration-500" />
                         </Link>
-                        <div className="p-8 text-center">
-                            <h3 className="text-xl md:text-2xl font-black text-black group-hover:text-rose transition-colors font-serif mb-6">{cat.name}</h3>
-                            <Link 
-                                href={`/categories/${cat.id}`}
-                                className="inline-block bg-pink-50 text-rose font-black px-10 py-3 rounded-full hover:bg-pink-100 hover:scale-105 transition-all shadow-md"
-                            >
-                                استكشفي القسم 🌸
-                            </Link>
-                        </div>
+                        
                     </motion.div>
                 ))}
             </div>

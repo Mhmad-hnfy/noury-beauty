@@ -32,10 +32,10 @@ const Header = () => {
                 
                 {/* Left Side: Search & Menu */}
                 <div className="flex items-center gap-4 flex-1">
-                    <button onClick={() => setMobileOpen(true)} className="p-2 text-rose hover:bg-rose/5 rounded-full transition-colors">
+                    <button onClick={() => setMobileOpen(true)} className="p-2 text-[#fbcfe8] hover:bg-rose/5 rounded-full transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                     </button>
-                    <button onClick={() => setSearchOpen(true)} className="p-2 text-rose hover:bg-rose/5 rounded-full transition-colors group">
+                    <button onClick={() => setSearchOpen(true)} className="p-2 text-[#fbcfe8] hover:bg-rose/5 rounded-full transition-colors group">
                         <svg className="group-hover:text-rose-hover" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </button>
                 </div>
@@ -51,15 +51,15 @@ const Header = () => {
                 
                 {/* Right Side: Cart & Account */}
                 <div className="flex items-center gap-4 flex-1 justify-end">
-                    <button className="hidden md:block p-2 text-rose hover:bg-rose/5 rounded-full transition-colors group">
+                    <button className="hidden md:block p-2 text-[#fbcfe8] hover:bg-[#fbcfe8] rounded-full transition-colors group">
                         <svg className="group-hover:text-rose-hover transition-colors" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </button>
-                    <Link href="/cart" className="relative group p-2 rounded-full hover:bg-rose/5 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-rose" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <Link href="/cart" className="relative group p-2 rounded-full hover:bg-[#fbcfe8] transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#fbcfe8]" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h1.49l.66 2.35 1.15 4.15H14.7a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                             <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
                         </svg>
-                        <span className="absolute -top-1 -right-1 bg-[#FDF2F8] text-rose text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-rose shadow-lg">
+                        <span className="absolute -top-1 -right-1 bg-[#FDF2F8] text-[#fbcfe8] text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-[#fbcfe8] shadow-lg">
                             {cartCount}
                         </span>
                     </Link>

@@ -1,6 +1,7 @@
 "use client"
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const Hearo = () => {
   return (
@@ -58,12 +59,12 @@ const Hearo = () => {
             transition={{ delay: 0.8 }}
             className="flex gap-4 justify-end"
           >
-            <button className="bg-[#BB015E] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#8F0147] transition-all shadow-lg hover:shadow-pink-200 transform hover:-translate-y-1">
+            <Link href="/products" className="bg-[#BB015E] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#8F0147] transition-all shadow-lg hover:shadow-pink-200 transform hover:-translate-y-1 flex items-center justify-center">
               تسوقي الآن
-            </button>
-            <button className="border-2 border-[#BB015E] text-[#BB015E] px-8 py-4 rounded-full text-lg font-bold hover:bg-pink-100 transition-all transform hover:-translate-y-1">
+            </Link>
+            <Link href="/products" className="border-2 border-[#BB015E] text-[#BB015E] px-8 py-4 rounded-full text-lg font-bold hover:bg-pink-100 transition-all transform hover:-translate-y-1 flex items-center justify-center">
               اكتشفي المزيد
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 
