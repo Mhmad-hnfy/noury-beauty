@@ -3,9 +3,11 @@
 :root {
   --background: #FDF2F8;
   --foreground: #111827;
-  /* Slightly darker rose for better contrast and premium feel */
+  /* Dark Rose brand color */
   --primary: #be123c; 
   --primary-hover: #9f1239;
+  /* Light Pink contrast color (Site Color) */
+  --site-light: #FDF2F8;
 }
 
 @theme inline {
@@ -13,6 +15,7 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-site-light: var(--site-light);
 }
 
 body {
@@ -26,6 +29,8 @@ body {
 .text-rose { color: var(--primary); }
 .bg-rose { background-color: var(--primary); }
 .border-rose { border-color: var(--primary); }
+.text-site-light { color: var(--site-light); }
+.bg-site-light { background-color: var(--site-light); }
 
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out forwards;

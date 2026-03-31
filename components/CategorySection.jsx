@@ -18,7 +18,7 @@ const CategorySection = ({ category }) => {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-24 px-6 max-w-7xl mx-auto border-b last:border-0 border-rose/5 animate-fade-in transition-all">
+    <section className="py-24 px-6 max-w-[90rem] mx-auto border-b last:border-0 border-rose/5 animate-fade-in transition-all">
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
         <div className="text-right">
           <h2 className="text-4xl lg:text-5xl font-black text-black mb-4 font-serif">{category.name} ✨</h2>
@@ -29,7 +29,7 @@ const CategorySection = ({ category }) => {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14">
         {products.map((product) => (
           <motion.div 
             key={product.id} 
@@ -45,30 +45,34 @@ const CategorySection = ({ category }) => {
                 )}
             </Link>
 
-            <div className="p-5 text-center">
-              <h3 className="text-base md:text-lg font-bold text-black mb-3 truncate px-2">{product.name}</h3>
+            <div className="p-5 text-right flex flex-col">
+              <h3 className="text-lg md:text-xl font-medium text-black mb-1 truncate font-sans">{product.name}</h3>
+              <p className="text-gray-400 text-xs mb-3">متوفر بخيارات متعددة</p>
               
-              <div className="flex flex-col items-center mb-5 gap-1">
-                {product.originalPrice && product.originalPrice > product.price && (
-                    <span className="text-black/30 line-through text-xs font-bold">{product.originalPrice} جنيه</span>
-                )}
-                <p className="text-rose font-black text-xl">
-                  {product.price} <span className="text-[10px]">جنيه مصري</span>
+              <div className="flex flex-col items-start mb-6 gap-0.5 mt-auto">
+                <p className="text-black font-bold text-xl md:text-2xl">
+                  <span className="text-xs font-medium text-black/60 mr-1">EGP</span> {product.price}
                 </p>
+                {product.originalPrice && product.originalPrice > product.price && (
+                    <div className="flex items-center gap-2">
+                       <span className="text-gray-300 line-through text-sm">EGP {product.originalPrice}</span>
+                       <span className="text-rose text-[10px] font-bold">0%</span>
+                    </div>
+                )}
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <Link 
                   href={`/checkout?productId=${product.id}`}
-                  className="w-full bg-rose hover:bg-rose-hover text-white font-bold py-2.5 rounded-full transition-colors text-xs"
+                  className="w-full bg-pink-50 hover:bg-pink-100 text-rose font-black py-4 rounded-full transition-all text-sm shadow-md flex items-center justify-center"
                 >
-                  اشتري الآن
+                  اشتري الآن 🛍️
                 </Link>
                 <button 
                   onClick={() => addToCart(product)}
-                  className="w-full bg-white border-2 border-rose/20 text-rose hover:border-rose font-bold py-2.5 rounded-full transition-all text-xs"
+                  className="w-full bg-white border-2 border-pink-100 text-rose hover:bg-rose hover:text-white font-black py-4 rounded-full transition-all text-sm flex items-center justify-center"
                 >
-                  أضف للسلة
+                  أضف للسلة 🛒
                 </button>
               </div>
             </div>

@@ -5,12 +5,13 @@ import Footer from '../../components/Footer';
 import { useSearchParams } from 'next/navigation';
 import { db } from '../../data/supabase';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
   const productId = searchParams.get('productId');
   const [product, setProduct] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [orderPlaced, setOrderPlaced] = useState(false);
   
@@ -150,18 +151,50 @@ function CheckoutContent() {
             <div className="bg-white p-10 rounded-[3rem] shadow-xl border-4 border-white overflow-hidden relative sticky top-24">
               <h2 className="text-2xl font-bold text-gray-800 mb-8 border-b border-pink-50 pb-4">مراجعة طلبك 🛍️</h2>
               
-              <div className="flex gap-6 items-center mb-10 p-4 bg-pink-50 rounded-3xl border border-pink-100">
-                <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              <div className="space-y-6 mb-10 overflow-hidden">
+                {/* Main Image Slider Area */}
+                <div className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden bg-pink-50 border-4 border-white shadow-inner mb-4">
+                  <AnimatePresence mode="wait">
+                    <motion.img 
+                      key={activeImageIndex}
+                      src={product.images ? product.images[activeImageIndex] : product.image} 
+                      alt={product.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full h-full object-cover"
+                    />
+                  </AnimatePresence>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800">{product.name}</h3>
-                  <div className="text-[#BB015E] font-black text-2xl">{product.price} <span className="text-xs">جنيه</span></div>
-                </div>
-                <div className="flex items-center gap-3 bg-white px-3 py-1 rounded-full border border-pink-200">
-                   <button onClick={handleIncrease} className="text-[#BB015E] font-bold">+</button>
-                   <span className="font-bold text-gray-700">{quantity}</span>
-                   <button onClick={handleDecrease} className="text-[#BB015E] font-bold">-</button>
+
+                {/* Thumbnail Preview Reel */}
+                {product.images && product.images.length > 1 && (
+                  <div className="flex gap-3 overflow-x-auto pb-4 px-2 scrollbar-hide">
+                    {product.images.map((img, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all flex-shrink-0 ${activeImageIndex === idx ? 'border-rose scale-105 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      >
+                        <img src={img} className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex gap-6 items-center p-4 bg-pink-50 rounded-3xl border border-pink-100 mt-6 shadow-sm">
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-black text-gray-800 mb-1">{product.name}</h3>
+                    <div className="text-black font-black text-3xl">
+                       <span className="text-sm font-medium text-black/60 mr-1">EGP</span> {product.price}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-full border border-pink-200 shadow-sm">
+                     <button onClick={handleIncrease} className="text-rose font-black text-xl hover:scale-125 transition-transform">+</button>
+                     <span className="font-black text-xl text-gray-700 min-w-[1.5rem] text-center">{quantity}</span>
+                     <button onClick={handleDecrease} className="text-rose font-black text-xl hover:scale-125 transition-transform">-</button>
+                  </div>
                 </div>
               </div>
 

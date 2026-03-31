@@ -16,7 +16,8 @@ export default function AdminProductsPage() {
     price: '',
     originalPrice: '',
     categoryId: 1,
-    image: null
+    image: null,
+    images: []
   });
 
   useEffect(() => {
@@ -24,24 +25,70 @@ export default function AdminProductsPage() {
     setCategories(db.categories.list());
   }, []);
 
-  const onDrop = useCallback(acceptedFiles => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setFormData(prev => ({ ...prev, image: reader.result }));
-    };
-    reader.readAsDataURL(file);
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(dataUrl);
+        };
+        img.onerror = reject;
+        img.src = event.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const onDrop = useCallback(async acceptedFiles => {
+    try {
+      const compressedImages = await Promise.all(
+        acceptedFiles.map(file => compressImage(file))
+      );
+      setFormData(prev => ({ 
+        ...prev, 
+        images: [...(prev.images || []), ...compressedImages]
+      }));
+    } catch (error) {
+      console.error("Error compressing images:", error);
+      alert("حدث خطأ أثناء معالجة الصور 🌸");
+    }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop, 
     accept: {'image/*': []},
-    multiple: false 
+    multiple: true 
   });
 
   const handleOpenAdd = () => {
     setEditingProduct(null);
-    setFormData({ name: '', price: '', originalPrice: '', categoryId: 1, image: null });
+    setFormData({ name: '', price: '', originalPrice: '', categoryId: 1, image: null, images: [] });
     setIsModalOpen(true);
   };
 
@@ -52,19 +99,21 @@ export default function AdminProductsPage() {
         price: product.price,
         originalPrice: product.originalPrice || '',
         categoryId: product.categoryId || 1,
-        image: product.image
+        image: product.image,
+        images: product.images || (product.image ? [product.image] : [])
     });
     setIsModalOpen(true);
   };
 
   const handleSave = () => {
-    if (!formData.name || !formData.price || !formData.image) {
-      alert('يرجى إكمال البيانات الأساسية وصورة المنتج 🌸');
+    if (!formData.name || !formData.price || (!formData.images || formData.images.length === 0)) {
+      alert('يرجى إكمال البيانات الأساسية وصورة واحدة على الأقل 🌸');
       return;
     }
 
     const payload = {
         ...formData,
+        image: formData.images[0], // Main image for backward compatibility
         price: parseFloat(formData.price),
         originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
         categoryId: parseInt(formData.categoryId)
@@ -197,23 +246,30 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Left Side: Image Upload */}
                 <div className="space-y-4">
-                    <label className="block text-sm font-bold text-gray-400 mr-2">صورة المنتج</label>
+                    <label className="block text-sm font-bold text-gray-400 mr-2">صور المنتج</label>
                     <div 
                         {...getRootProps()} 
-                        className={`border-4 border-dashed rounded-[2rem] p-8 text-center cursor-pointer transition-all h-64 flex flex-col items-center justify-center overflow-hidden relative ${
+                        className={`border-4 border-dashed rounded-[2rem] p-8 text-center cursor-pointer transition-all h-40 flex flex-col items-center justify-center overflow-hidden relative ${
                              isDragActive ? 'border-[#BB015E] bg-pink-50' : 'border-pink-100 hover:border-pink-300'
                         }`}
                     >
                         <input {...getInputProps()} />
-                        {formData.image ? (
-                            <img src={formData.image} className="absolute inset-0 w-full h-full object-cover" alt="preview" />
-                        ) : (
-                            <>
-                                <div className="text-4xl mb-4">📸</div>
-                                <p className="text-gray-400 text-sm font-bold">اسحبي الصورة هنا <br/> أو اضغطي للاختيار</p>
-                            </>
-                        )}
+                        <div className="text-4xl mb-4">📸</div>
+                        <p className="text-gray-400 text-sm font-bold">اسحبي الصور هنا <br/> أو اضغطي للاختيار</p>
                     </div>
+                    {formData.images && formData.images.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                            {formData.images.map((img, idx) => (
+                                <div key={idx} className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-pink-100 flex-shrink-0 group">
+                                    <img src={img} className="w-full h-full object-cover" alt="preview" />
+                                    <button 
+                                      onClick={() => setFormData(prev => ({...prev, images: prev.images.filter((_, i) => i !== idx)}))}
+                                      className="absolute top-1 right-1 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center text-[10px] text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100"
+                                    >✕</button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Side: Details */}

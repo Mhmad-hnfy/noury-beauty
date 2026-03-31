@@ -79,7 +79,7 @@ const Slider = () => {
             transition={{ delay: 0.8 }}
             className="pt-8"
           >
-            <button className="bg-rose hover:bg-rose-hover text-white px-10 py-4 rounded-full text-xl font-black shadow-2xl transition-all transform hover:scale-105 active:scale-95">
+            <button className="bg-pink-50 hover:bg-pink-100 text-rose px-10 py-4 rounded-full text-xl font-black shadow-xl border border-rose/10 transition-all transform hover:scale-105 active:scale-95">
                 تصفحي المجموعة ✨
             </button>
           </motion.div>

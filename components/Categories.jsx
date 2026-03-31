@@ -12,14 +12,14 @@ const Categories = () => {
     }, []);
 
     return (
-        <section className="py-24 px-6 max-w-7xl mx-auto bg-transparent overflow-hidden animate-fade-in transition-all">
+        <section className="py-24 px-6 max-w-[90rem] mx-auto bg-transparent overflow-hidden animate-fade-in transition-all">
             <div className="flex flex-col items-center mb-20 gap-4">
                 <span className="text-rose font-black tracking-widest text-sm uppercase">تسوقي حسب اختيارك</span>
                 <h2 className="text-4xl md:text-5xl font-black text-black font-serif">الأقسام المميزة ✨</h2>
                 <div className="h-2 w-32 bg-rose rounded-full" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 lg:gap-14">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-20">
                 {categories.map((cat, index) => (
                     <motion.div 
                         key={cat.id} 
@@ -27,29 +27,29 @@ const Categories = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                         viewport={{ once: true }}
+                        whileHover={{ y: -10 }}
+                        className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-rose/5 group"
                     >
                         <Link 
                             href={`/categories/${cat.id}`}
-                            className="group cursor-pointer flex flex-col items-center"
+                            className="block relative aspect-video overflow-hidden bg-pink-50"
                         >
-                            <motion.div 
-                                whileHover={{ scale: 1.05 }}
-                                className="w-full aspect-square rounded-[3rem] overflow-hidden border-4 border-rose/5 shadow-sm group-hover:border-rose/20 transition-all duration-500 relative"
-                            >
-                                <img 
-                                    src={cat.image} 
-                                    alt={cat.name} 
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-0 bg-rose/10 group-hover:bg-transparent transition-colors duration-500"></div>
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="bg-white/90 backdrop-blur-md text-rose text-xs font-black px-6 py-2 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                                        استكشفي
-                                    </span>
-                                </div>
-                            </motion.div>
-                            <h3 className="mt-6 text-lg md:text-xl font-black text-black group-hover:text-rose transition-colors font-serif">{cat.name}</h3>
+                            <img 
+                                src={cat.image} 
+                                alt={cat.name} 
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-rose/10 group-hover:bg-transparent transition-colors duration-500" />
                         </Link>
+                        <div className="p-8 text-center">
+                            <h3 className="text-xl md:text-2xl font-black text-black group-hover:text-rose transition-colors font-serif mb-6">{cat.name}</h3>
+                            <Link 
+                                href={`/categories/${cat.id}`}
+                                className="inline-block bg-pink-50 text-rose font-black px-10 py-3 rounded-full hover:bg-pink-100 hover:scale-105 transition-all shadow-md"
+                            >
+                                استكشفي القسم 🌸
+                            </Link>
+                        </div>
                     </motion.div>
                 ))}
             </div>

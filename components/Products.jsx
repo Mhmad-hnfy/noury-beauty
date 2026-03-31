@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { db } from '../data/supabase';
 
@@ -10,7 +10,6 @@ const Products = ({ categoryId, limit }) => {
   const [products, setProducts] = useState([]);
   
   useEffect(() => {
-    // Fetch products from the mock DB
     const list = db.products.list();
     const filtered = categoryId 
         ? list.filter(p => p.categoryId === parseInt(categoryId)) 
@@ -19,108 +18,70 @@ const Products = ({ categoryId, limit }) => {
     setProducts(limit ? filtered.slice(0, limit) : filtered);
   }, [categoryId, limit]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-  
   return (
-    <section className="py-20 px-4 max-w-7xl mx-auto bg-white">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="text-center mb-14"
-      >
-        <h2 className="text-3xl md:text-5xl font-bold text-[#BB015E] mb-4">
-          {categoryId ? 'منتجات القسم' : 'أحدث المنتجات'}
-        </h2>
-        <p className="text-black font-bold text-lg">تشكيلة مميزة من أرقى المنتجات لجمالك</p>
-      </motion.div>
+    <section className="py-24 px-6 max-w-[90rem] mx-auto bg-transparent animate-fade-in transition-all">
+      <div className="flex flex-col items-center mb-16 gap-4">
+          <span className="text-rose font-black tracking-widest text-sm uppercase">اكتشفي الآن</span>
+          <h2 className="text-4xl md:text-5xl font-black text-black font-serif text-center">
+            {categoryId ? 'منتجات القسم ✨' : 'أحدث المنتجات المميزة 💄'}
+          </h2>
+          <div className="h-2 w-32 bg-rose rounded-full" />
+      </div>
 
       {products.length > 0 ? (
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14">
           {products.map((product) => (
             <motion.div 
               key={product.id} 
-              variants={itemVariants}
               whileHover={{ y: -10 }}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-pink-100 group relative"
+              className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-rose/5 group"
             >
-              {/* Sale Badge */}
-              {product.originalPrice && product.originalPrice > product.price && (
-                <div className="absolute top-4 left-4 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full z-20 shadow-lg animate-bounce">
-                    خصم {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                </div>
-              )}
+              <Link href={`/checkout?productId=${product.id}`} className="block relative h-80 w-full overflow-hidden bg-pink-50">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                {product.originalPrice && product.originalPrice > product.price && (
+                    <div className="absolute top-6 right-6 bg-rose text-site-light text-xs font-black px-4 py-1.5 rounded-full z-20 shadow-lg">
+                        خصم {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                    </div>
+                )}
+              </Link>
 
-              <div className="relative h-72 w-full overflow-hidden bg-pink-50">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  className="absolute inset-0 bg-[#BB015E]/20 flex items-center justify-center transition-colors px-6 text-center z-10"
-                >
-                   <Link 
-                     href={`/checkout?productId=${product.id}`}
-                     className="bg-white text-[#BB015E] font-bold py-3 px-8 rounded-full shadow-lg"
-                   >
-                     معاينة سريعة
-                   </Link>
-                </motion.div>
-              </div>
-
-              <div className="p-6 text-center">
-                <h3 className="text-xl font-bold text-black mb-2">{product.name}</h3>
+              <div className="p-5 text-right flex flex-col">
+                <h3 className="text-lg md:text-xl font-medium text-black mb-1 truncate font-sans">{product.name}</h3>
+                {/* <p className="text-gray-400 text-xs mb-3">متوفر بخيارات متعددة</p> */}
                 
-                {/* Price Display with Discount */}
-                <div className="flex flex-col items-center mb-5">
-                    {product.originalPrice && product.originalPrice > product.price && (
-                        <span className="text-black/40 line-through text-sm font-bold">{product.originalPrice} جنيه</span>
-                    )}
-                    <p className="text-[#BB015E] font-black text-2xl">
-                        {product.price} <span className="text-sm">جنيه مصري</span>
+                <div className="flex flex-col items-start mb-6 gap-0.5">
+                    <p className="text-black font-bold text-xl md:text-2xl">
+                        <span className="text-xs font-medium text-black/60 mr-1">EGP</span> {product.price}
                     </p>
+                    {product.originalPrice && product.originalPrice > product.price && (
+                        <div className="flex items-center gap-2">
+                           <span className="text-gray-300 line-through text-sm">EGP {product.originalPrice}</span>
+                           <span className="text-rose text-[10px] font-bold">0%</span>
+                        </div>
+                    )}
                 </div>
 
-                <div className="flex gap-2 w-full">
+                <div className="flex flex-col gap-3">
                   <Link 
                     href={`/checkout?productId=${product.id}`}
-                    className="flex-1 bg-[#BB015E] hover:bg-[#8F0147] text-white font-medium py-3 rounded-full transition-colors text-sm flex items-center justify-center"
+                    className="w-full bg-pink-50 text-rose hover:bg-pink-100 font-black py-4 rounded-full transition-all shadow-md text-sm flex items-center justify-center"
                   >
-                    شراء الآن
+                    شراء الآن 🛍️
                   </Link>
                   <button 
                     onClick={() => addToCart(product)}
-                    className="flex-1 bg-white border-2 border-[#BB015E] text-[#BB015E] hover:bg-pink-50 font-medium py-3 rounded-full transition-colors text-sm"
+                    className="w-full bg-white border-2 border-pink-100 text-rose hover:bg-rose hover:text-white font-black py-4 rounded-full transition-all text-sm"
                   >
-                    أضف إلى السلة
+                    أضف للسلة 🛒
                   </button>
                 </div>
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       ) : (
-        <div className="text-center py-10">
-          <p className="text-gray-500 text-lg">لا توجد منتجات متوفرة حالياً في هذا القسم. ✨</p>
+        <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-[3rem] border-2 border-dashed border-rose/10">
+          <p className="text-black/50 text-xl font-bold">لا توجد منتجات متوفرة حالياً في هذا القسم. 🌸</p>
         </div>
       )}
     </section>
