@@ -19,7 +19,7 @@ const Categories = () => {
                 <div className="h-2 w-32 bg-rose rounded-full" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14">
                 {categories.map((cat, index) => (
                     <motion.div 
                         key={cat.id} 
@@ -28,7 +28,7 @@ const Categories = () => {
                         transition={{ delay: index * 0.1 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -10 }}
-                        className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border-3 border-[#BE123C] group"
+                        className="bg-white rounded-[2rem] overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
                     >
                         <Link 
                             href={`/categories/${cat.id}`}
@@ -41,7 +41,16 @@ const Categories = () => {
                             />
                             <div className="absolute inset-0 bg-rose/10 group-hover:bg-transparent transition-colors duration-500" />
                         </Link>
-                        
+                        <div className="p-6 text-right flex flex-col gap-1">
+                            <h3 className="text-4xl font-bold text-gray-900 group-hover:text-rose transition-colors duration-300 font-serif mb-4">{cat.name}</h3>
+                            <Link 
+                                href={`/categories/${cat.id}`}
+                                className="w-full bg-[#fbcfe8] text-[#BE123C] text-center py-3.5 rounded-2xl font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                            >
+                                <span>استكشفي القسم</span>
+                                <span className="text-lg">🌸</span>
+                            </Link>
+                        </div>
                     </motion.div>
                 ))}
             </div>

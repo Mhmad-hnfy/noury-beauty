@@ -56,7 +56,7 @@ const CategorySection = ({ category }) => {
                 {product.originalPrice && product.originalPrice > product.price && (
                     <div className="flex items-center gap-2 text-xs font-bold text-gray-300">
                        <span className="line-through">EGP {product.originalPrice}</span>
-                       <span className="text-rose/50">0%</span>
+                       {/* <span className="text-rose/50">0%</span> */}
                     </div>
                 )}
               </div>
