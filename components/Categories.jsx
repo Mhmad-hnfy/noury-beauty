@@ -28,7 +28,7 @@ const Categories = () => {
                         transition={{ delay: index * 0.1 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -10 }}
-                        className="bg-white rounded-[2rem] overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
+                        className="bg-white rounded-none overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
                     >
                         <Link 
                             href={`/categories/${cat.id}`}
@@ -45,7 +45,7 @@ const Categories = () => {
                             <h3 className="text-4xl font-bold text-gray-900 group-hover:text-rose transition-colors duration-300 font-serif mb-4">{cat.name}</h3>
                             <Link 
                                 href={`/categories/${cat.id}`}
-                                className="w-full bg-[#fbcfe8] text-[#BE123C] text-center py-3.5 rounded-2xl font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                                className="w-full bg-[#FDF2F8] text-[#BE123C] text-center py-3.5 rounded-none font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                             >
                                 <span>استكشفي القسم</span>
                                 <span className="text-lg">🌸</span>

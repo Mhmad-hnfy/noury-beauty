@@ -34,7 +34,7 @@ const Products = ({ categoryId, limit }) => {
             <motion.div 
               key={product.id} 
               whileHover={{ y: -5 }}
-              className="bg-white rounded-[2rem] overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
+              className="bg-white rounded-none overflow-hidden transition-all duration-500 group border border-transparent hover:border-rose/10"
             >
               <Link href={`/checkout?productId=${product.id}`} className="block relative aspect-square w-full overflow-hidden bg-pink-50/50">
                 <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -64,14 +64,14 @@ const Products = ({ categoryId, limit }) => {
                 <div className="grid grid-cols-1 gap-2 mt-6">
                   <Link 
                     href={`/checkout?productId=${product.id}`}
-                    className="w-full   text-center py-3.5 rounded-2xl font-bold hover:bg-[#fbcfe8] transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full   text-center py-3.5 rounded-none font-bold hover:bg-[#fbcfe8] transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                   >
                     <span>شراء الآن</span>
                     <span className="text-lg">🛍️</span>
                   </Link>
                   <button 
                     onClick={() => addToCart(product)}
-                    className="w-full bg-pink-50 text-rose text-center py-3.5 rounded-2xl font-bold hover:bg-pink-100 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full bg-pink-50 text-rose text-center py-3.5 rounded-none font-bold hover:bg-pink-100 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     <span>أضف للسلة</span>
                     <span className="text-lg">🛒</span>
@@ -82,7 +82,7 @@ const Products = ({ categoryId, limit }) => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-[3rem] border-2 border-dashed border-rose/10">
+        <div className="text-center py-20 bg-white/30 backdrop-blur-md rounded-none border-2 border-dashed border-rose/10">
           <p className="text-black/50 text-xl font-bold">لا توجد منتجات متوفرة حالياً في هذا القسم. 🌸</p>
         </div>
       )}
