@@ -81,8 +81,8 @@ export async function POST(req) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            source_data: {
-                type: "wallet",
+            source: {
+                subtype: "WALLET",
                 identifier: walletNumber
             },
             payment_token: paymentKey
