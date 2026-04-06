@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { db } from '../../data/supabase';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
