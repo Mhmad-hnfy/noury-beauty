@@ -108,7 +108,6 @@ function CheckoutContent() {
           body: JSON.stringify({
             amount: depositAmount,
             billingData: formData,
-            integrationId: 5579763,
             walletNumber: formData.walletNumber
           }),
         });
@@ -311,14 +310,14 @@ function CheckoutContent() {
                     <div className="text-5xl">📱</div>
                     <div className="text-center">
                         <div className="font-black text-lg">محفظة إلكترونية</div>
-                        <div className="text-[10px] text-gray-400 mt-1">فودافون كاش، اتصالات، إلخ (دفع آلي)</div>
+                        <div className="text-[10px] text-gray-400 mt-1">فودافون كاش، اتصالات، إلخ (Paymob)</div>
                     </div>
                   </div>
                   
                   <div className={`p-6 rounded-[2rem] border-2 transition-all cursor-pointer flex flex-col items-center gap-3 ${formData.paymentMethod === 'instapay' ? 'border-[#BB015E] bg-white shadow-xl scale-105' : 'border-pink-100 bg-pink-50/30'}`} onClick={() => setFormData({...formData, paymentMethod: 'instapay'})}>
                     <div className="text-5xl">⚡</div>
                     <div className="text-center">
-                        <div className="font-black text-lg">إنستا باي (InstaPay)</div>
+                        <div className="font-black text-lg">إنستا باي</div>
                         <div className="text-[11px] font-sans text-[#BB015E] mt-1 font-bold">{settings.instaPay}</div>
                     </div>
                   </div>

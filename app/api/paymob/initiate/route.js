@@ -3,19 +3,25 @@ import { NextResponse } from 'next/server';
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { amount, billingData, integrationId } = body;
+    const { amount, billingData, walletNumber } = body;
 
-    // 1. Auth Step
+    // Use Wallet Integration ID by default
+    const integrationId = process.env.PAYMOB_WALLET_INTEGRATION_ID || "5579763";
+
+    console.log('--- Paymob Step 1: Authentication ---');
     const authResponse = await fetch('https://accept.paymob.com/api/auth/tokens', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ api_key: process.env.PAYMOB_API_KEY }),
     });
 
-    if (!authResponse.ok) throw new Error('Paymob Auth Failed');
+    if (!authResponse.ok) {
+        const err = await authResponse.text();
+        throw new Error(`Auth Failed: ${err}`);
+    }
     const { token: authToken } = await authResponse.json();
 
-    // 2. Order Registration
+    console.log('--- Paymob Step 2: Order Registration ---');
     const orderResponse = await fetch('https://accept.paymob.com/api/ecommerce/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -30,12 +36,11 @@ export async function POST(req) {
 
     if (!orderResponse.ok) {
       const errorData = await orderResponse.json();
-      console.error('Paymob Order Registration Failed:', errorData);
       throw new Error(`Order Registration Failed: ${JSON.stringify(errorData)}`);
     }
     const { id: orderId } = await orderResponse.json();
 
-    // 3. Payment Key Generation
+    console.log('--- Paymob Step 3: Payment Key Generation ---');
     const paymentKeyResponse = await fetch('https://accept.paymob.com/api/acceptance/payment_keys', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -54,10 +59,10 @@ export async function POST(req) {
           phone_number: billingData.phone || "01200000000",
           shipping_method: "PKG",
           postal_code: "NA",
-          city: billingData.city || "Cairo",
+          city: billingData.province || "Cairo",
           country: "EG",
           last_name: "User",
-          state: billingData.state || "Egypt"
+          state: billingData.province || "Egypt"
         },
         currency: "EGP",
         integration_id: integrationId,
@@ -66,50 +71,44 @@ export async function POST(req) {
 
     if (!paymentKeyResponse.ok) {
       const errorData = await paymentKeyResponse.json();
-      console.error('Paymob Payment Key Generation Failed:', errorData);
-      throw new Error(`Payment Key Generation Failed: ${JSON.stringify(errorData)}`);
+      throw new Error(`Payment Key Failed: ${JSON.stringify(errorData)}`);
     }
     const { token: paymentKey } = await paymentKeyResponse.json();
 
-    // 4. Direct Wallet Pay (Optional but better for UX)
-    let redirectionUrl = null;
-    if (body.walletNumber) {
-      const payResponse = await fetch('https://accept.paymob.com/api/acceptance/payments/pay', {
+    console.log('--- Paymob Step 4: Wallet Redirection ---');
+    // If a wallet number is provided, we can trigger the "Direct Pay" API
+    const payResponse = await fetch('https://accept.paymob.com/api/acceptance/payments/pay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          source_data: {
-            type: "wallet",
-            identifier: body.walletNumber
-          },
-          payment_token: paymentKey
+            source_data: {
+                type: "wallet",
+                identifier: walletNumber
+            },
+            payment_token: paymentKey
         }),
-      });
+    });
 
-      if (payResponse.ok) {
-        const payData = await payResponse.json();
-        redirectionUrl = payData.iframe_redirection_url || payData.redirect_url;
-      } else {
+    if (!payResponse.ok) {
         const errorData = await payResponse.json();
-        console.error('Paymob Direct Wallet Pay Failed:', errorData);
-      }
+        console.error('Wallet Pay Error:', errorData);
+        // Fallback to the default Paymob payment page if direct pay fails
+        return NextResponse.json({ 
+            paymentKey,
+            redirectionUrl: `https://accept.paymob.com/api/acceptance/payments/pay?payment_token=${paymentKey}`
+        });
     }
+
+    const payData = await payResponse.json();
+    const redirectionUrl = payData.iframe_redirection_url || payData.redirect_url;
 
     return NextResponse.json({ 
       paymentKey, 
-      iframeId: process.env.PAYMOB_IFRAME_ID,
       redirectionUrl 
     });
     
   } catch (error) {
-    console.error('Paymob Integration Error:', error.message);
+    console.error('Paymob Detailed Error:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
-
-export async function GET() {
-  return NextResponse.json({ 
-    message: "This endpoint only accepts POST requests from the checkout page.",
-    hint: "Please go to the checkout page to initiate a payment."
-  }, { status: 405 });
 }
