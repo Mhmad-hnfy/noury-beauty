@@ -92,15 +92,11 @@ export async function POST(req) {
     if (!payResponse.ok) {
         const errorData = await payResponse.json();
         console.error('Wallet Pay Error:', errorData);
-        // Fallback to the default Paymob payment page if direct pay fails
-        return NextResponse.json({ 
-            paymentKey,
-            redirectionUrl: `https://accept.paymob.com/api/acceptance/payments/pay?payment_token=${paymentKey}`
-        });
+        throw new Error(`Wallet Pay Failed: ${JSON.stringify(errorData)}`);
     }
 
     const payData = await payResponse.json();
-    const redirectionUrl = payData.iframe_redirection_url || payData.redirect_url;
+    const redirectionUrl = payData.iframe_redirection_url || payData.redirect_url || payData.url;
 
     return NextResponse.json({ 
       paymentKey, 
