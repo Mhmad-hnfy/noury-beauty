@@ -21,14 +21,18 @@ export async function POST(req) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         auth_token: authToken,
-        delivery_needed: "false",
+        delivery_needed: false,
         amount_cents: Math.round(amount * 100),
         currency: "EGP",
         items: []
       }),
     });
 
-    if (!orderResponse.ok) throw new Error('Paymob Order Registration Failed');
+    if (!orderResponse.ok) {
+      const errorData = await orderResponse.json();
+      console.error('Paymob Order Registration Failed:', errorData);
+      throw new Error(`Order Registration Failed: ${JSON.stringify(errorData)}`);
+    }
     const { id: orderId } = await orderResponse.json();
 
     // 3. Payment Key Generation
@@ -60,7 +64,11 @@ export async function POST(req) {
       }),
     });
 
-    if (!paymentKeyResponse.ok) throw new Error('Paymob Payment Key Generation Failed');
+    if (!paymentKeyResponse.ok) {
+      const errorData = await paymentKeyResponse.json();
+      console.error('Paymob Payment Key Generation Failed:', errorData);
+      throw new Error(`Payment Key Generation Failed: ${JSON.stringify(errorData)}`);
+    }
     const { token: paymentKey } = await paymentKeyResponse.json();
 
     // 4. Direct Wallet Pay (Optional but better for UX)
@@ -81,6 +89,9 @@ export async function POST(req) {
       if (payResponse.ok) {
         const payData = await payResponse.json();
         redirectionUrl = payData.iframe_redirection_url || payData.redirect_url;
+      } else {
+        const errorData = await payResponse.json();
+        console.error('Paymob Direct Wallet Pay Failed:', errorData);
       }
     }
 
@@ -91,7 +102,7 @@ export async function POST(req) {
     });
     
   } catch (error) {
-    console.error('Paymob Integration Error:', error);
+    console.error('Paymob Integration Error:', error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

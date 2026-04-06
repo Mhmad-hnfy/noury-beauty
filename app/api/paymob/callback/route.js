@@ -59,7 +59,10 @@ export async function GET(req) {
     const txnId = searchParams.get('id');
     
     // Redirect the user to our frontend success/failure pages
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    
     const targetUrl = success ? `${baseUrl}/checkout/success?id=${txnId}` : `${baseUrl}/checkout/failure?id=${txnId}`;
     
     return NextResponse.redirect(targetUrl);

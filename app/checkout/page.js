@@ -114,7 +114,10 @@ function CheckoutContent() {
         });
 
         const data = await response.json();
-        if (data.error) throw new Error(data.error);
+        if (data.error) {
+          console.error('Paymob Error Detail:', data.error);
+          throw new Error(data.error);
+        }
 
         // Redirect to Paymob (using the redirection URL from API)
         if (data.redirectionUrl) {
@@ -125,8 +128,8 @@ function CheckoutContent() {
         }
         return; // Don't set orderPlaced yet, we wait for callback
       } catch (err) {
-        alert('عذراً، حدث خطأ أثناء الاتصال ببوابة الدفع. يرجى المحاولة لاحقاً. 🌸');
-        console.error(err);
+        console.error('Payment Initiation Failed:', err);
+        alert(`عذراً، حدث خطأ أثناء الاتصال ببوابة الدفع (${err.message}). يرجى المحاولة لاحقاً. 🌸`);
         setIsProcessing(false);
         return;
       }
