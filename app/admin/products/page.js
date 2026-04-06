@@ -32,8 +32,8 @@ export default function AdminProductsPage() {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
           let width = img.width;
           let height = img.height;
 
@@ -54,7 +54,7 @@ export default function AdminProductsPage() {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
           resolve(dataUrl);
         };
         img.onerror = reject;
@@ -258,14 +258,17 @@ export default function AdminProductsPage() {
                         <p className="text-gray-400 text-sm font-bold">اسحبي الصور هنا <br/> أو اضغطي للاختيار</p>
                     </div>
                     {formData.images && formData.images.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-4">
+                        <div className="flex flex-wrap gap-4 mt-6">
                             {formData.images.map((img, idx) => (
-                                <div key={idx} className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-pink-100 flex-shrink-0 group">
+                                <div key={idx} className="relative w-32 h-32 rounded-[2rem] overflow-hidden border-4 border-pink-50 flex-shrink-0 group shadow-md">
                                     <img src={img} className="w-full h-full object-cover" alt="preview" />
                                     <button 
                                       onClick={() => setFormData(prev => ({...prev, images: prev.images.filter((_, i) => i !== idx)}))}
-                                      className="absolute top-1 right-1 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center text-[10px] text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100"
+                                      className="absolute top-2 left-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-all transform hover:scale-110"
                                     >✕</button>
+                                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                                       <span className="text-[10px] text-white font-bold bg-black/40 px-2 py-1 rounded-full">{idx === 0 ? 'الأساسية' : `صورة ${idx + 1}`}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>

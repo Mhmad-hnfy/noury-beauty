@@ -57,20 +57,44 @@ export default function AdminSettingsPage() {
               />
             </div>
             <div className="text-right">
-              <label className="block text-sm font-bold text-black mb-2 mr-2">رسوم الشحن الثابتة</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">رقم المحفظة (للدفع)</label>
               <input 
-                type="number" 
-                value={settings.shippingFee}
-                onChange={(e) => setSettings({...settings, shippingFee: e.target.value})}
+                type="text" 
+                value={settings.walletNumber || ''}
+                onChange={(e) => setSettings({...settings, walletNumber: e.target.value})}
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
+                placeholder="010xxxxxxx"
+              />
+            </div>
+            <div className="text-right">
+              <label className="block text-sm font-bold text-black mb-2 mr-2">حساب InstaPay</label>
+              <input 
+                type="text" 
+                value={settings.instaPay || ''}
+                onChange={(e) => setSettings({...settings, instaPay: e.target.value})}
+                className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
+                placeholder="username@instapay"
+              />
+            </div>
+          </div>
+
+          <h3 className="text-lg font-bold text-[#BB015E] pt-6 border-t border-pink-50">🔐 إعدادات الحساب (الأدمن)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            <div className="text-right">
+              <label className="block text-sm font-bold text-black mb-2 mr-2">بريد تسجيل الدخول</label>
+              <input 
+                type="email" 
+                value={settings.adminEmail || ''}
+                onChange={(e) => setSettings({...settings, adminEmail: e.target.value})}
                 className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
               />
             </div>
             <div className="text-right">
-              <label className="block text-sm font-bold text-black mb-2 mr-2">العملة</label>
+              <label className="block text-sm font-bold text-black mb-2 mr-2">كلمة مرور لوحة التحكم</label>
               <input 
                 type="text" 
-                value={settings.currency}
-                onChange={(e) => setSettings({...settings, currency: e.target.value})}
+                value={settings.adminPassword || ''}
+                onChange={(e) => setSettings({...settings, adminPassword: e.target.value})}
                 className="w-full p-4 rounded-2xl bg-pink-50 focus:bg-white border-2 border-transparent focus:border-[#BB015E] outline-none transition-all text-black font-bold"
               />
             </div>

@@ -56,6 +56,7 @@ export default function AdminLayout({ children }) {
     { name: 'المنتجات', icon: '🛍️', path: '/admin/products' },
     { name: 'الأقسام', icon: '📁', path: '/admin/categories' },
     { name: 'الطلبات', icon: '📦', path: '/admin/orders' },
+    { name: 'أسعار الشحن', icon: '🚚', path: '/admin/shipping' },
     { name: 'الإعدادات', icon: '⚙️', path: '/admin/settings' },
   ];
 

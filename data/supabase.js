@@ -11,11 +11,19 @@ const getCollection = (key, defaultData = []) => {
 
 const saveCollection = (key, data) => {
     if (typeof window !== 'undefined') {
-        localStorage.setItem(key, JSON.stringify(data));
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) {
+            if (e.name === 'QuotaExceededError' || e.code === 22) {
+                alert('⚠️ عذراً، ذاكرة المتصفح ممتلئة! يرجى مسح الطلبات القديمة أو بعض المنتجات لتوفير مساحة. 🌸');
+            } else {
+                console.error("Storage error:", e);
+            }
+        }
     }
 };
 
-import { products as initialProducts, categories as initialCategories } from './data';
+import { products as initialProducts, categories as initialCategories, provinces as initialProvinces } from './data';
 
 export const db = {
     // Products
@@ -54,6 +62,27 @@ export const db = {
             saveCollection('nb_categories', newList);
         }
     },
+    // Shipping Fees
+    shipping_fees: {
+        list: () => getCollection('nb_shipping_fees', initialProvinces || []),
+        add: (item) => {
+            const list = getCollection('nb_shipping_fees', []);
+            const newItem = { ...item, id: Date.now() };
+            const newList = [...list, newItem];
+            saveCollection('nb_shipping_fees', newList);
+            return newItem;
+        },
+        update: (item) => {
+            const list = getCollection('nb_shipping_fees', []);
+            const newList = list.map(i => i.id === item.id ? item : i);
+            saveCollection('nb_shipping_fees', newList);
+        },
+        delete: (id) => {
+            const list = getCollection('nb_shipping_fees', []);
+            const newList = list.filter(i => i.id !== id);
+            saveCollection('nb_shipping_fees', newList);
+        }
+    },
     // Orders
     orders: {
         list: () => getCollection('nb_orders', []),
@@ -81,7 +110,11 @@ export const db = {
             storeName: 'Noury Beauty',
             contactEmail: 'contact@noury.com',
             shippingFee: 0,
-            currency: 'جنيه مصري'
+            currency: 'جنيه مصري',
+            walletNumber: '01012345678',
+            instaPay: 'noury@instapay',
+            adminEmail: 'admin@noury.com',
+            adminPassword: 'admin123'
         }),
         update: (newSettings) => saveCollection('nb_settings', newSettings)
     }

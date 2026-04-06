@@ -10,12 +10,17 @@ export default function AdminLoginPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Mock login logic
-    if (email === 'admin@noury.com' && password === 'admin123') {
+    
+    // Fetch live settings
+    const settings = db.settings.get();
+    const storedEmail = settings.adminEmail || 'admin@noury.com';
+    const storedPassword = settings.adminPassword || 'admin123';
+
+    if (email === storedEmail && password === storedPassword) {
       localStorage.setItem('isAdmin', 'true');
       router.push('/admin');
     } else {
-      alert('البيانات غير صحيحة! جربي admin@noury.com و admin123');
+      alert('البيانات غير صحيحة');
     }
   };
 

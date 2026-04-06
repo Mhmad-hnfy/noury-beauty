@@ -79,3 +79,16 @@ export const products = [
     ]
   },
 ];
+
+export const provinces = [
+  { id: 1, name: 'القاهرة', fee: 50 },
+  { id: 2, name: 'الجيزة', fee: 50 },
+  { id: 3, name: 'الإسكندرية', fee: 60 },
+  { id: 4, name: 'القليوبية', fee: 55 },
+  { id: 5, name: 'المنوفية', fee: 65 },
+  { id: 6, name: 'البحيرة', fee: 70 },
+  { id: 7, name: 'الدقهلية', fee: 65 },
+  { id: 8, name: 'الغربية', fee: 65 },
+  { id: 9, name: 'الشرقية', fee: 65 },
+  { id: 10, name: 'دمياط', fee: 70 }
+];
