@@ -67,17 +67,8 @@ export default function OrderSummary({ shippingPrice = 0 }) {
         ))}
       </div>
 
-      {/* Discount Code */}
-      <div className="flex gap-2">
-        <input 
-          type="text" 
-          placeholder={isRTL ? "كود الخصم" : "Discount code"}
-          className="flex-1 h-12 px-4 border border-gray-200 rounded-md focus:outline-none focus:border-[#c19a2e] transition-all text-sm placeholder:text-gray-400"
-        />
-        <button className="px-6 bg-gray-100 text-gray-400 font-bold text-xs uppercase tracking-wider rounded-md border border-gray-200 cursor-not-allowed">
-           {isRTL ? "تطبيق" : "Apply"}
-        </button>
-      </div>
+      
+      
 
       {/* Pricing Table */}
       <div className="flex flex-col gap-3 py-6 border-y border-gray-200">
