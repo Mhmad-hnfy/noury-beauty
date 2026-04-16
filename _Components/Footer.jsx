@@ -66,7 +66,7 @@ function Footer() {
             <span>&copy; 2024, Noury Beauty</span>
             <span className="mx-1">|</span>
             <span>All rights reserved. </span>
-            <span>Developed by DISTRICT10</span>
+            <a href="https://www.facebook.com/mohamed.hanafy.10004" target="_blank" rel="noopener noreferrer">Developed by Mohamed Hanafy</a>
           </div>
 
           <div className="flex items-center gap-10 relative">
