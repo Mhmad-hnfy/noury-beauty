@@ -7,10 +7,7 @@ export async function POST(req) {
     const body = await req.json();
     const { obj } = body;
     
-    // Paymob sends the HMAC in the query parameter for simple callbacks, 
-    // but in webhooks it's usually in the URL or the payload.
-    // However, the standard way to verify a transaction webhook is by using 
-    // the query parameter 'hmac' passed in the notification URL.
+    // ... (HMAC verification remains same)
     const url = new URL(req.url);
     const receivedHmac = url.searchParams.get('hmac');
 
@@ -20,12 +17,6 @@ export async function POST(req) {
       return NextResponse.json({ error: 'HMAC secret not configured' }, { status: 500 });
     }
 
-    // Step 1: Extract and concatenate fields in exact order
-    // Order: amount_cents, created_at, currency, error_occured, has_parent_transaction, 
-    // id, integration_id, is_3d_secure, is_auth, is_capture, is_refunded, 
-    // is_standalone_payment, is_voided, order.id, owner, pending, 
-    // source_data.pan, source_data.sub_type, source_data.type, success
-    
     const hmacString = [
       obj.amount_cents,
       obj.created_at,
@@ -49,13 +40,11 @@ export async function POST(req) {
       obj.success
     ].join('');
 
-    // Step 2: Calculate HMAC-SHA512
     const calculatedHmac = crypto
       .createHmac('sha512', hmacSecret)
       .update(hmacString)
       .digest('hex');
 
-    // Step 3: Compare
     if (calculatedHmac !== receivedHmac) {
       console.warn('Invalid HMAC signature received from Paymob');
       return NextResponse.json({ message: 'Invalid signature' }, { status: 401 });
@@ -66,9 +55,8 @@ export async function POST(req) {
       const paymobOrderId = obj.order.id;
       const transactionId = obj.id;
 
-      if (supabase) {
-        // Find order by Paymob Order ID and update it
-        const { error } = await supabase
+      // Update order in Supabase by Paymob Order ID
+      const { data, error: updateError } = await supabase
           .from('orders')
           .update({ 
             status: 'confirmed', 
@@ -81,13 +69,11 @@ export async function POST(req) {
           })
           .eq('paymob_order_id', paymobOrderId);
 
-        if (error) {
-          console.error('Error updating order in Supabase:', error.message);
-          return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
-        }
+      if (updateError) {
+          console.error(`Error updating order for Paymob Order ID ${paymobOrderId}:`, updateError);
+      } else {
+          console.log(`Payment successful and order updated for Paymob Order ID: ${paymobOrderId}`);
       }
-
-      console.log(`Payment successful for Paymob Order ID: ${paymobOrderId}`);
     } else {
       console.log('Payment transaction was not successful:', obj.success);
     }

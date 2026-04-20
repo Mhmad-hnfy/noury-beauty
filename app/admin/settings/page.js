@@ -13,14 +13,19 @@ export default function AdminSettings() {
 
     const handleUpdateEmail = async (e) => {
         e.preventDefault();
-        if (!supabase) return;
         setLoading(true);
         setMessage({ type: '', text: '' });
 
         try {
-            const { error } = await supabase.auth.updateUser({ email });
-            if (error) throw error;
-            setMessage({ type: 'success', text: isRTL ? 'تم إرسال طلب التحديث! يرجى التحقق من بريدك الجديد.' : 'Email update request sent! Please check your new email.' });
+            const { error: updateError } = await supabase.auth.updateUser({ email });
+            if (updateError) throw updateError;
+            
+            setMessage({ 
+                type: 'success', 
+                text: isRTL 
+                    ? 'تم إرسال رابط تأكيد التغيير إلى البريد الإلكتروني الجديد!' 
+                    : 'Confirmation link sent to the new email address!' 
+            });
         } catch (err) {
             setMessage({ type: 'error', text: err.message });
         } finally {
@@ -30,13 +35,13 @@ export default function AdminSettings() {
 
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
-        if (!supabase) return;
         setLoading(true);
         setMessage({ type: '', text: '' });
 
         try {
-            const { error } = await supabase.auth.updateUser({ password });
-            if (error) throw error;
+            const { error: updateError } = await supabase.auth.updateUser({ password });
+            if (updateError) throw updateError;
+
             setMessage({ type: 'success', text: isRTL ? 'تم تحديث كلمة المرور بنجاح!' : 'Password updated successfully!' });
             setPassword('');
         } catch (err) {

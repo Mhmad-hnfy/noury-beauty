@@ -11,10 +11,13 @@ export default function ReviewsManager() {
         if (!confirm(isRTL ? 'هل أنت متأكد من حذف هذا التقييم؟' : 'Are you sure you want to delete this review?')) return;
 
         try {
-            if (supabase) {
-                const { error } = await supabase.from('reviews').delete().eq('id', id);
-                if (error) throw error;
-            }
+            const { error: deleteError } = await supabase
+                .from('reviews')
+                .delete()
+                .eq('id', id);
+
+            if (deleteError) throw deleteError;
+            
             await deleteReview(id);
             alert(isRTL ? 'تم الحذف بنجاح' : 'Review deleted successfully');
         } catch (err) {

@@ -106,18 +106,8 @@ export default function CheckoutForm({ onShippingChange }) {
         const finalTotalLocal = subtotalLocal + shippingPrice;
         const depositAmountLocal = Math.round(finalTotalLocal * 0.2);
 
-        if (!supabase) {
-            console.log("Order details (Demo Mode):", {
-                customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
-                customer_phone: `${formData.phone} / ${formData.phone2}`,
-                total_amount: finalTotalLocal,
-                deposit_amount: depositAmountLocal,
-                shipping_address: `${formData.address}, ${formData.governorate}`
-            });
-        }
-
-        // 1. Create order in DB as pending
-        const { data: orderData, error: dbError } = await supabase
+        // 1. Create order in Supabase as pending
+        const { data: orderData, error: orderError } = await supabase
             .from('orders')
             .insert([{
                 customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
@@ -130,12 +120,13 @@ export default function CheckoutForm({ onShippingChange }) {
                 customer_phone: `${formData.phone} / ${formData.phone2}`,
                 governorate: formData.governorate,
                 payment_method: 'paymob_deposit',
-                shipping_address: `${formData.address}, ${formData.apartment}, ${formData.city}, ${formData.governorate}`
+                shipping_address: `${formData.address}, ${formData.apartment}, ${formData.city}, ${formData.governorate}`,
+                created_at: new Date().toISOString()
             }])
             .select()
             .single();
 
-        if (dbError) throw dbError;
+        if (orderError) throw orderError;
 
         // 2. Call our API to get Paymob token
         const payRes = await fetch('/api/checkout', {
@@ -157,12 +148,12 @@ export default function CheckoutForm({ onShippingChange }) {
         if (payError) throw new Error(payError);
 
         // 3. Update Supabase order with Paymob Order ID for tracking
-        if (supabase) {
-            await supabase
-                .from('orders')
-                .update({ paymob_order_id: paymobOrderId })
-                .eq('id', orderData.id);
-        }
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({ paymob_order_id: paymobOrderId })
+            .eq('id', orderData.id);
+
+        if (updateError) throw updateError;
 
         // 4. Redirect
         localStorage.removeItem('noury_checkout_item');
@@ -195,11 +186,6 @@ export default function CheckoutForm({ onShippingChange }) {
       <section className="flex flex-col gap-6">
         <div className="flex justify-between items-end">
           <h2 className="text-xl font-medium text-gray-900">{t('checkout_contact')}</h2>
-          {!supabase && (
-            <span className="text-[10px] bg-yellow-100 text-yellow-700 font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
-                Demo Mode (No DB)
-            </span>
-          )}
         </div>
         <InputField 
             label={isRTL ? "البريد الإلكتروني (اختياري)" : "Email Address (Optional)"} 

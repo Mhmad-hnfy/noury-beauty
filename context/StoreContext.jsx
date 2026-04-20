@@ -98,7 +98,8 @@ const translations = {
     admin_new_email: "New Email Address",
     admin_new_password: "New Password",
     admin_update: "Update",
-    admin_edit: "Edit",
+    admin_edit: "Edit Product",
+    admin_new: "Add New Product",
     admin_reviews: "Reviews",
   },
   ar: {
@@ -191,7 +192,8 @@ const translations = {
     admin_new_email: "البريد الإلكتروني الجديد",
     admin_new_password: "كلمة المرور الجديدة",
     admin_update: "تحديث",
-    admin_edit: "تعديل",
+    admin_edit: "تعديل المنتج",
+    admin_new: "إضافة منتج جديد",
     admin_reviews: "الآراء",
     admin_shipping: "أسعار الشحن",
   }
@@ -266,21 +268,17 @@ export const StoreProvider = ({ children }) => {
 
   const [shippingRates, setShippingRates] = useState([]);
   const [isShippingLoading, setIsShippingLoading] = useState(true);
-  const [dbConnected, setDbConnected] = useState(!!supabase);
+  const [dbConnected, setDbConnected] = useState(true);
 
-  // Fetch Shipping Rates
+  // Fetch Shipping Rates from Firestore
   const fetchShippingRates = async () => {
-    if (!supabase) {
-        setShippingRates([]);
-        setIsShippingLoading(false);
-        return;
-    }
     try {
       setIsShippingLoading(true);
       const { data, error } = await supabase
         .from('shipping_rates')
         .select('*')
         .order('name_ar', { ascending: true });
+      
       if (error) throw error;
       setShippingRates(data || []);
     } catch (err) {
@@ -307,26 +305,15 @@ export const StoreProvider = ({ children }) => {
   }, []);
 
   const fetchProducts = async () => {
-    if (!supabase) {
-      console.warn('Supabase credentials missing. Checking localStorage.');
-      const savedProducts = localStorage.getItem('noury_products');
-      if (savedProducts) {
-        setProducts(JSON.parse(savedProducts));
-      } else {
-        setProducts(MOCK_PRODUCTS);
-        localStorage.setItem('noury_products', JSON.stringify(MOCK_PRODUCTS));
-      }
-      setIsLoading(false);
-      return;
-    }
     try {
       setIsLoading(true);
       const { data, error } = await supabase
         .from('products')
-        .select('*, variants')
+        .select('*')
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
+      
       // Normalize data (mapping old_price to oldPrice for UI consistency)
       const normalizedData = data?.map(p => ({
           ...p,
@@ -345,45 +332,30 @@ export const StoreProvider = ({ children }) => {
   const addProduct = async (product) => {
     const newProducts = [product, ...products];
     setProducts(newProducts);
-    if (!supabase) {
-        localStorage.setItem('noury_products', JSON.stringify(newProducts));
-    }
   };
 
   const updateProduct = async (id, updatedData) => {
     const newProducts = products.map(p => p.id === id ? { ...p, ...updatedData } : p);
     setProducts(newProducts);
-    if (!supabase) {
-        localStorage.setItem('noury_products', JSON.stringify(newProducts));
-    }
   };
 
   const deleteProduct = async (id) => {
     const newProducts = products.filter(p => p.id !== id);
     setProducts(newProducts);
-    if (!supabase) {
-        localStorage.setItem('noury_products', JSON.stringify(newProducts));
-    }
   };
 
   const fetchReviews = async () => {
-    if (!supabase) {
-      const saved = localStorage.getItem('noury_reviews');
-      if (saved) {
-        setReviews(JSON.parse(saved));
-      } else {
-        setReviews(DEFAULT_REVIEWS);
-        localStorage.setItem('noury_reviews', JSON.stringify(DEFAULT_REVIEWS));
-      }
-      setIsReviewsLoading(false);
-      return;
-    }
     try {
       setIsReviewsLoading(true);
-      const { data, error } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+
       if (error) throw error;
       setReviews(data?.length > 0 ? data : DEFAULT_REVIEWS);
     } catch (error) {
+       console.error("Error fetching reviews:", error.message);
        setReviews(DEFAULT_REVIEWS);
     } finally {
        setIsReviewsLoading(false);
@@ -393,25 +365,16 @@ export const StoreProvider = ({ children }) => {
   const addReview = async (review) => {
     const newReviews = [review, ...reviews];
     setReviews(newReviews);
-    if (!supabase) {
-        localStorage.setItem('noury_reviews', JSON.stringify(newReviews));
-    }
   };
 
   const updateReview = async (id, updatedData) => {
     const newReviews = reviews.map(r => r.id === id ? { ...r, ...updatedData } : r);
     setReviews(newReviews);
-    if (!supabase) {
-        localStorage.setItem('noury_reviews', JSON.stringify(newReviews));
-    }
   };
 
   const deleteReview = async (id) => {
     const newReviews = reviews.filter(r => r.id !== id);
     setReviews(newReviews);
-    if (!supabase) {
-        localStorage.setItem('noury_reviews', JSON.stringify(newReviews));
-    }
   };
 
   const toggleLanguage = (lang) => {

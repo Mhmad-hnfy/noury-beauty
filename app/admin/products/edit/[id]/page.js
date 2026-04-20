@@ -8,7 +8,7 @@ import { useStore } from '@/context/StoreContext';
 export default function EditProduct() {
     const { id } = useParams();
     const router = useRouter();
-    const { products, fetchProducts, updateProduct, isLoading } = useStore();
+    const { products, fetchProducts, isLoading } = useStore();
     
     const [loading, setLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
@@ -28,7 +28,7 @@ export default function EditProduct() {
                 setFormData({
                     title: product.title,
                     price: product.price,
-                    oldPrice: product.oldPrice || '',
+                    oldPrice: product.oldPrice || product.old_price || '',
                 });
                 
                 // Convert existing data to variants structure if needed
@@ -83,44 +83,23 @@ export default function EditProduct() {
             const allImages = [];
             const allColors = [];
 
-            if (!supabase) {
-                // Demo Mode
-                variants.forEach(v => {
-                    const imgUrl = v.preview;
-                    finalVariants.push({ color: v.color, colorName: v.colorName, image: imgUrl });
-                    allImages.push(imgUrl);
-                    allColors.push(v.color);
-                });
-
-                await updateProduct(id, {
-                    ...formData,
-                    variants: finalVariants,
-                    images: allImages,
-                    colors: allColors
-                });
-                alert("Updated in Demo Mode");
-                router.push('/admin/products');
-                return;
-            }
-
-            // 1. Upload Images for modified variants
+            // 1. Upload Images for modified variants to Supabase Storage
             for (const v of variants) {
                 let publicUrl = v.preview; 
 
                 if (v.imageFile) {
                     const fileExt = v.imageFile.name.split('.').pop();
-                    const fileName = `${Math.random()}.${fileExt}`;
-                    const filePath = `products/${fileName}`;
-
-                    const { error: uploadError } = await supabase.storage
-                        .from('product-images')
-                        .upload(filePath, v.imageFile);
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                    
+                    const { data, error: uploadError } = await supabase.storage
+                        .from('products')
+                        .upload(fileName, v.imageFile);
 
                     if (uploadError) throw uploadError;
 
                     const { data: { publicUrl: url } } = supabase.storage
-                        .from('product-images')
-                        .getPublicUrl(filePath);
+                        .from('products')
+                        .getPublicUrl(fileName);
                     
                     publicUrl = url;
                 }
@@ -135,8 +114,8 @@ export default function EditProduct() {
                 allColors.push(v.color);
             }
 
-            // 2. Update DB
-            const { error } = await supabase
+            // 2. Update Supabase record
+            const { error: updateError } = await supabase
                 .from('products')
                 .update({
                     title: formData.title,
@@ -148,11 +127,12 @@ export default function EditProduct() {
                 })
                 .eq('id', id);
 
-            if (error) throw error;
+            if (updateError) throw updateError;
 
             await fetchProducts();
             router.push('/admin/products');
         } catch (err) {
+            console.error("Error updating product:", err);
             alert("Error: " + err.message);
         } finally {
             setLoading(false);

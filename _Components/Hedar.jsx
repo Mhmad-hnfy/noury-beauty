@@ -8,7 +8,29 @@ export default function Hedar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const { language, toggleLanguage, t, searchQuery, setSearchQuery, isRTL, wishlist, cart, isCartOpen, setIsCartOpen } = useStore();
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      setShowInstallButton(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm font-sans">
@@ -112,6 +134,17 @@ export default function Hedar() {
             )}
           </div>
 
+          {/* Install App Button (Desktop) */}
+          {showInstallButton && (
+            <button 
+              onClick={handleInstallClick}
+              className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#6d1616] text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-black transition-all shadow-md group"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>{language === 'en' ? 'Install App' : 'تثبيت التطبيق'}</span>
+            </button>
+          )}
+
           {/* Icons Group */}
           <div className="flex items-center gap-1 md:gap-4 text-gray-800">
             {/* Search Icon */}
@@ -166,6 +199,16 @@ export default function Hedar() {
             <a href="#" className="hover:text-[#6d1616] py-2 border-b border-gray-50">{t('bundles')}</a>
             <a href="#" className="hover:text-[#6d1616] py-2 border-b border-gray-50">{t('about')}</a>
             <a href="#" className="hover:text-[#6d1616] py-2 border-b border-gray-50 font-serif lowercase tracking-normal">{t('contact')}</a>
+            
+            {showInstallButton && (
+              <button 
+                onClick={handleInstallClick}
+                className="mt-4 w-full py-4 bg-[#6d1616] text-white text-xs font-bold uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 active:scale-95 transition-transform"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                {language === 'en' ? 'Download Our App' : 'تحميل تطبيقنا'}
+              </button>
+            )}
           </nav>
         </div>
       )}

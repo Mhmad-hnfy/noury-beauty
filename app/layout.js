@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono, Playfair_Display, Poppins, Cairo } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
 
@@ -34,6 +35,13 @@ import ScrollButton from "@/_Components/ScrollButton";
 export const metadata = {
   title: "Noury Beauty",
   description: "Best beauty products in Egypt",
+  manifest: "/manifest.json",
+  themeColor: "#d4af37",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Noury Beauty",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -42,11 +50,28 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${poppins.variable} ${cairo.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#6d1616" />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <StoreProvider>
           {children}
           <ScrollButton />
         </StoreProvider>
+        <Script
+          id="register-sw"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

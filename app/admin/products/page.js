@@ -11,10 +11,13 @@ export default function ProductsManager() {
         if (!confirm(isRTL ? 'هل أنت متأكد من حذف هذا المنتج؟' : 'Are you sure you want to delete this product?')) return;
 
         try {
-            if (supabase) {
-                const { error } = await supabase.from('products').delete().eq('id', id);
-                if (error) throw error;
-            }
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', id);
+            
+            if (error) throw error;
+            
             await deleteProduct(id);
             alert(isRTL ? 'تم الحذف بنجاح' : 'Product deleted successfully');
         } catch (err) {

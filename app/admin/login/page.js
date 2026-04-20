@@ -15,15 +15,9 @@ export default function AdminLogin() {
         e.preventDefault();
         
         // Mock Login / Emergency Bypass
-        // This allows you to log in even if Supabase is connected but you haven't created a user yet.
         if (email === 'admin@nourybeauty.com' && password === 'nouryadmin123') {
             localStorage.setItem('noury_demo_mode', 'true');
             router.push('/admin/dashboard');
-            return;
-        }
-
-        if (!supabase) {
-            setError('Demo Mode: Please use admin@nourybeauty.com / nouryadmin123');
             return;
         }
 
@@ -31,13 +25,14 @@ export default function AdminLogin() {
         setError(null);
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
+            const { error: loginError } = await supabase.auth.signInWithPassword({
                 email,
-                password,
+                password
             });
 
-            if (error) throw error;
-            localStorage.removeItem('noury_demo_mode'); // Clear bypass if real login succeeds
+            if (loginError) throw loginError;
+
+            localStorage.removeItem('noury_demo_mode');
             router.push('/admin/dashboard');
         } catch (err) {
             setError(err.message);

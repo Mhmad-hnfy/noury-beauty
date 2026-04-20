@@ -8,7 +8,7 @@ import { useStore } from '@/context/StoreContext';
 export default function EditReview() {
     const router = useRouter();
     const { id } = useParams();
-    const { reviews, updateReview, fetchReviews, isReviewsLoading: contextLoading } = useStore();
+    const { reviews, fetchReviews, isReviewsLoading: contextLoading } = useStore();
     
     const [loading, setLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
@@ -58,32 +58,24 @@ export default function EditReview() {
         try {
             let finalImageUrl = preview;
 
-            if (supabase && imageFile) {
+            if (imageFile) {
                 const fileExt = imageFile.name.split('.').pop();
-                const fileName = `${Math.random()}.${fileExt}`;
-                const filePath = `reviews/${fileName}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from('product-images')
-                    .upload(filePath, imageFile);
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                
+                const { data, error: uploadError } = await supabase.storage
+                    .from('products')
+                    .upload(fileName, imageFile);
 
                 if (uploadError) throw uploadError;
 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('product-images')
-                    .getPublicUrl(filePath);
+                const { data: { publicUrl: url } } = supabase.storage
+                    .from('products')
+                    .getPublicUrl(fileName);
                 
-                finalImageUrl = publicUrl;
+                finalImageUrl = url;
             }
 
-            if (!supabase) {
-                await updateReview(id, { ...formData, image: finalImageUrl });
-                alert("Review updated in Demo Mode");
-                router.push('/admin/reviews');
-                return;
-            }
-
-            const { error } = await supabase
+            const { error: updateError } = await supabase
                 .from('reviews')
                 .update({
                     name: formData.name,
@@ -96,11 +88,12 @@ export default function EditReview() {
                 })
                 .eq('id', id);
 
-            if (error) throw error;
+            if (updateError) throw updateError;
 
             await fetchReviews();
             router.push('/admin/reviews');
         } catch (err) {
+            console.error("Error updating review:", err);
             alert("Error updating review: " + err.message);
         } finally {
             setLoading(false);

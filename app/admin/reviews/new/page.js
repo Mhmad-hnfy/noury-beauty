@@ -7,7 +7,7 @@ import { useStore } from '@/context/StoreContext';
 
 export default function NewReview() {
     const router = useRouter();
-    const { addReview, fetchReviews, t } = useStore();
+    const { fetchReviews } = useStore();
     const [loading, setLoading] = useState(false);
     
     const [formData, setFormData] = useState({
@@ -36,54 +36,42 @@ export default function NewReview() {
         try {
             let finalImageUrl = preview;
 
-            if (supabase && imageFile) {
+            if (imageFile) {
                 const fileExt = imageFile.name.split('.').pop();
-                const fileName = `${Math.random()}.${fileExt}`;
-                const filePath = `reviews/${fileName}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from('product-images')
-                    .upload(filePath, imageFile);
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                
+                const { data, error: uploadError } = await supabase.storage
+                    .from('products') // Reusing products bucket for reviews too, or create separate if needed
+                    .upload(fileName, imageFile);
 
                 if (uploadError) throw uploadError;
 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('product-images')
-                    .getPublicUrl(filePath);
+                const { data: { publicUrl: url } } = supabase.storage
+                    .from('products')
+                    .getPublicUrl(fileName);
                 
-                finalImageUrl = publicUrl;
+                finalImageUrl = url;
             }
 
-            if (!supabase) {
-                const newReview = {
-                    id: 'mock-rev-' + Date.now(),
-                    ...formData,
-                    image: preview || "https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=800",
-                    created_at: new Date().toISOString()
-                };
-                await addReview(newReview);
-                alert("Review saved in Demo Mode");
-                router.push('/admin/reviews');
-                return;
-            }
-
-            const { error } = await supabase
+            const { error: insertError } = await supabase
                 .from('reviews')
                 .insert([{
                     name: formData.name,
                     stars: parseInt(formData.stars),
-                    date: formData.date,
+                    date: formData.date || 'Just now',
                     title: formData.title,
                     content: formData.content,
                     product: formData.product,
-                    image: finalImageUrl
+                    image: finalImageUrl,
+                    created_at: new Date().toISOString()
                 }]);
 
-            if (error) throw error;
+            if (insertError) throw insertError;
 
             await fetchReviews();
             router.push('/admin/reviews');
         } catch (err) {
+            console.error("Error creating review:", err);
             alert("Error: " + err.message);
         } finally {
             setLoading(false);

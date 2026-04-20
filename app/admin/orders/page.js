@@ -17,23 +17,14 @@ export default function OrdersManager() {
     }, []);
 
     const fetchOrders = async () => {
-        if (!supabase) {
-            // Mock Orders for Demo Mode
-            setOrders([
-                { id: 'mq-1', customer_name: 'Sarah Ahmed', customer_email: 'sarah@example.com', total_amount: 300, status: 'pending', created_at: new Date().toISOString(), shipping_address: 'Cairo, Egypt' },
-                { id: 'mq-2', customer_name: 'Noor Ali', customer_email: 'noor@example.com', total_amount: 450, status: 'shipped', created_at: new Date().toISOString(), shipping_address: 'Alexandria, Egypt' }
-            ]);
-            setLoading(false);
-            return;
-        }
         try {
             setLoading(true);
-            const { data, error } = await supabase
+            const { data, error: fetchError } = await supabase
                 .from('orders')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) throw error;
+            if (fetchError) throw fetchError;
             setOrders(data || []);
             setError(null);
         } catch (err) {
@@ -46,10 +37,13 @@ export default function OrdersManager() {
 
     const updateStatus = async (id, status) => {
         try {
-            if (supabase) {
-                const { error } = await supabase.from('orders').update({ status }).eq('id', id);
-                if (error) throw error;
-            }
+            const { error: updateError } = await supabase
+                .from('orders')
+                .update({ status })
+                .eq('id', id);
+
+            if (updateError) throw updateError;
+            
             setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
             if (selectedOrder?.id === id) setSelectedOrder({ ...selectedOrder, status });
         } catch (err) {
@@ -62,10 +56,13 @@ export default function OrdersManager() {
         
         try {
             setIsDeleting(true);
-            if (supabase) {
-                const { error } = await supabase.from('orders').delete().eq('id', id);
-                if (error) throw error;
-            }
+            const { error: deleteError } = await supabase
+                .from('orders')
+                .delete()
+                .eq('id', id);
+
+            if (deleteError) throw deleteError;
+
             setOrders(orders.filter(o => o.id !== id));
             setSelectedOrder(null);
         } catch (err) {
@@ -77,14 +74,9 @@ export default function OrdersManager() {
 
     return (
         <div className="flex flex-col gap-8 animate-in fade-in duration-500">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-8">
                 <div className="flex items-center gap-4">
                     <h3 className="text-xl font-serif text-black">{t('admin_orders')}</h3>
-                    {!supabase && (
-                        <span className="text-[9px] bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-sm uppercase tracking-widest">
-                            Demo Data
-                        </span>
-                    )}
                 </div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{orders.length} {t('admin_orders')}</p>
             </div>

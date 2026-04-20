@@ -7,9 +7,9 @@ import { useStore } from '@/context/StoreContext';
 export default function Dashboard() {
     const { t, isRTL } = useStore();
     const [stats, setStats] = useState({
-        totalProducts: 4,
-        totalOrders: 12,
-        totalRevenue: 2450.00
+        totalProducts: 0,
+        totalOrders: 0,
+        totalRevenue: 0.00
     });
     const [recentOrders, setRecentOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -19,40 +19,41 @@ export default function Dashboard() {
     }, []);
 
     const fetchStats = async () => {
-        if (!supabase) {
-            // Mock Stats for Demo Mode
-            setStats({
-                totalProducts: 4,
-                totalOrders: 12,
-                totalRevenue: 2450.00
-            });
-            setRecentOrders([
-                { id: 'mock-order-1', customer_name: 'Sarah Ahmed', total_amount: 300, status: 'pending', created_at: new Date().toISOString() },
-                { id: 'mock-order-2', customer_name: 'Noor Ali', total_amount: 450, status: 'shipped', created_at: new Date().toISOString() },
-                { id: 'mock-order-3', customer_name: 'Laila Mahmoud', total_amount: 1200, status: 'pending', created_at: new Date().toISOString() }
-            ]);
-            setLoading(false);
-            return;
-        }
         try {
             setLoading(true);
-            const { count: productCount } = await supabase
+            
+            // Fetch Products Count
+            const { count: productCount, error: productError } = await supabase
                 .from('products')
                 .select('*', { count: 'exact', head: true });
+            
+            if (productError) throw productError;
 
-            const { data: orderData, error: orderError } = await supabase
+            // Fetch All Orders for Revenue calculation
+            const { data: ordersData, error: ordersError } = await supabase
                 .from('orders')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            const totalRev = orderData?.reduce((acc, curr) => acc + (curr.total_amount || 0), 0) || 0;
+                .select('total_amount');
+            
+            if (ordersError) throw ordersError;
+            
+            const totalRev = ordersData.reduce((acc, curr) => acc + (parseFloat(curr.total_amount) || 0), 0);
 
             setStats({
                 totalProducts: productCount || 0,
-                totalOrders: orderData?.length || 0,
+                totalOrders: ordersData.length,
                 totalRevenue: totalRev
             });
-            setRecentOrders(orderData?.slice(0, 5) || []);
+
+            // Fetch Recent 5 Orders
+            const { data: recentData, error: recentError } = await supabase
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            if (recentError) throw recentError;
+            setRecentOrders(recentData || []);
+
         } catch (err) {
             console.error("Error fetching dashboard stats:", err);
         } finally {
@@ -79,11 +80,6 @@ export default function Dashboard() {
             <div className="flex flex-col gap-4 md:gap-6">
                 <div className="flex items-center gap-4">
                     <h3 className="text-lg md:text-xl font-serif text-black">{t('admin_recent_orders')}</h3>
-                    {!supabase && (
-                        <span className="text-[9px] bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-sm uppercase tracking-widest">
-                            Demo Data
-                        </span>
-                    )}
                 </div>
                 <div className="bg-white border border-gray-100 rounded-sm shadow-sm overflow-hidden">
                     <div className="overflow-x-auto w-full">

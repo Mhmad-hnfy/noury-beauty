@@ -7,7 +7,7 @@ import { useStore } from '@/context/StoreContext';
 
 export default function NewProduct() {
     const router = useRouter();
-    const { fetchProducts, addProduct } = useStore();
+    const { fetchProducts } = useStore();
     const [loading, setLoading] = useState(false);
     
     const [formData, setFormData] = useState({
@@ -50,48 +50,23 @@ export default function NewProduct() {
             const allImages = [];
             const allColors = [];
 
-            if (!supabase) {
-                // Demo Mode
-                variants.forEach((v, index) => {
-                    const imgUrl = v.preview || "https://images.unsplash.com/photo-1599733594230-6b823276abcc?q=80&w=800";
-                    finalVariants.push({ color: v.color, colorName: v.colorName, image: imgUrl });
-                    allImages.push(imgUrl);
-                    allColors.push(v.color);
-                });
-
-                const newProduct = {
-                    id: 'mock-' + Date.now(),
-                    ...formData,
-                    variants: finalVariants,
-                    images: allImages,
-                    colors: allColors,
-                    image: allImages[0],
-                    created_at: new Date().toISOString()
-                };
-                await addProduct(newProduct);
-                alert("Product saved in Demo Mode");
-                router.push('/admin/products');
-                return;
-            }
-
-            // 1. Upload Images for each variant
+            // 1. Upload Images for each variant to Supabase Storage
             for (const v of variants) {
                 let publicUrl = v.preview; // Fallback if no new file
 
                 if (v.imageFile) {
                     const fileExt = v.imageFile.name.split('.').pop();
-                    const fileName = `${Math.random()}.${fileExt}`;
-                    const filePath = `products/${fileName}`;
-
-                    const { error: uploadError } = await supabase.storage
-                        .from('product-images')
-                        .upload(filePath, v.imageFile);
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                    
+                    const { data, error: uploadError } = await supabase.storage
+                        .from('products')
+                        .upload(fileName, v.imageFile);
 
                     if (uploadError) throw uploadError;
 
                     const { data: { publicUrl: url } } = supabase.storage
-                        .from('product-images')
-                        .getPublicUrl(filePath);
+                        .from('products')
+                        .getPublicUrl(fileName);
                     
                     publicUrl = url;
                 }
@@ -106,8 +81,8 @@ export default function NewProduct() {
                 allColors.push(v.color);
             }
 
-            // 2. Save Product record
-            const { error } = await supabase
+            // 2. Save Product record to Supabase Table
+            const { error: insertError } = await supabase
                 .from('products')
                 .insert([{
                     title: formData.title,
@@ -115,10 +90,11 @@ export default function NewProduct() {
                     old_price: formData.oldPrice ? parseFloat(formData.oldPrice) : null,
                     colors: allColors,
                     images: allImages,
-                    variants: finalVariants
+                    variants: finalVariants,
+                    created_at: new Date().toISOString()
                 }]);
 
-            if (error) throw error;
+            if (insertError) throw insertError;
 
             await fetchProducts();
             router.push('/admin/products');

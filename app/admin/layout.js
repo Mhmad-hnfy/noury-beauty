@@ -14,52 +14,35 @@ export default function AdminLayout({ children }) {
     const { language, toggleLanguage, t, isRTL } = useStore();
 
     useEffect(() => {
-        checkUser();
-        
-        if (supabase) {
-            const { data: authListener } = supabase.auth.onAuthStateChange(
-                async (event, session) => {
-                    const currentUser = session?.user;
-                    if (currentUser) setUser(currentUser);
-                    else checkUser(); // Re-verify if it's the demo bypass
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                setUser(session.user);
+                setLoading(false);
+            } else {
+                const isDemo = localStorage.getItem('noury_demo_mode') === 'true';
+                if (!isDemo && pathname !== '/admin/login') {
+                    router.push('/admin/login');
                 }
-            );
+                setLoading(false);
+            }
+        };
 
-            return () => {
-                if (authListener) authListener.subscription.unsubscribe();
-            };
-        }
-    }, [pathname]);
+        checkUser();
 
-    const checkUser = async () => {
-        // First check for Demo Mode bypass in localStorage
-        const isDemo = localStorage.getItem('noury_demo_mode') === 'true';
-        if (isDemo) {
-            setUser({ email: 'admin@nourybeauty.com (Demo State)' });
-            setLoading(false);
-            return;
-        }
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+            if (!session?.user && localStorage.getItem('noury_demo_mode') !== 'true' && pathname !== '/admin/login') {
+                router.push('/admin/login');
+            }
+        });
 
-        if (!supabase) {
-            if (pathname !== '/admin/login') router.push('/admin/login');
-            setLoading(false);
-            return;
-        }
-
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session && pathname !== '/admin/login') {
-            router.push('/admin/login');
-        } else {
-            setUser(session?.user);
-        }
-        setLoading(false);
-    };
+        return () => subscription.unsubscribe();
+    }, [pathname, router]);
 
     const handleLogout = async () => {
         localStorage.removeItem('noury_demo_mode');
-        if (supabase) {
-            await supabase.auth.signOut();
-        }
+        await supabase.auth.signOut();
         router.push('/admin/login');
     };
 
@@ -129,7 +112,9 @@ export default function AdminLayout({ children }) {
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                         </button>
                         <h2 className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#6d1616]">
-                            {t('admin_' + pathname.split('/').pop())}
+                            {pathname.includes('/edit/') ? t('admin_edit') : 
+                             pathname.includes('/new') ? t('admin_new') : 
+                             t('admin_' + pathname.split('/').pop())}
                         </h2>
                     </div>
 

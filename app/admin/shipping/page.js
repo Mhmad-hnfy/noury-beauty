@@ -25,14 +25,8 @@ export default function ShippingManager() {
         setLoading(true);
 
         try {
-            if (!supabase) {
-                alert("Supabase not configured.");
-                setLoading(false);
-                return;
-            }
-
             if (editingId) {
-                const { error } = await supabase
+                const { error: updateError } = await supabase
                     .from('shipping_rates')
                     .update({
                         name_ar: formData.name_ar,
@@ -40,16 +34,18 @@ export default function ShippingManager() {
                         price: parseFloat(formData.price)
                     })
                     .eq('id', editingId);
-                if (error) throw error;
+
+                if (updateError) throw updateError;
             } else {
-                const { error } = await supabase
+                const { error: insertError } = await supabase
                     .from('shipping_rates')
                     .insert([{
                         name_ar: formData.name_ar,
                         name_en: formData.name_en,
                         price: parseFloat(formData.price)
                     }]);
-                if (error) throw error;
+
+                if (insertError) throw insertError;
             }
 
             await fetchShippingRates();
@@ -75,10 +71,12 @@ export default function ShippingManager() {
     const handleDelete = async (id) => {
         if (!confirm(isRTL ? 'هل أنت متأكد؟' : 'Are you sure?')) return;
         try {
-            if (supabase) {
-                const { error } = await supabase.from('shipping_rates').delete().eq('id', id);
-                if (error) throw error;
-            }
+            const { error: deleteError } = await supabase
+                .from('shipping_rates')
+                .delete()
+                .eq('id', id);
+
+            if (deleteError) throw deleteError;
             await fetchShippingRates();
         } catch (err) {
             alert(err.message);
